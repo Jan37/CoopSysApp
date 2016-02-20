@@ -40,7 +40,8 @@ public class Login extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-
+				ServerConnector.setUser(new User((spnDropDown.getSelectedItemPosition()+1), 
+						spnDropDown.getSelectedItem().toString()));
 				Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
 	            startActivity(intent);      
 	            //finish();

@@ -29,8 +29,4 @@ public class EinkaufPart {
 	public String getNotiz() {
 		return notiz;
 	}
-	
-	
-	
-
 }

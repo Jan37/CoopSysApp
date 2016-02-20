@@ -86,6 +86,7 @@ public class RegisterActivity extends Activity {
 					
 			try {
 				index = ServerConnector.register(name);
+				
 				Thread.sleep(500);
 			} catch (InterruptedException | IOException e) {
 				// TODO Auto-generated catch block

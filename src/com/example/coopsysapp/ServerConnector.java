@@ -136,6 +136,7 @@ public class ServerConnector {
 				}
 				nameString= nameString + ";" + (lastUser.getId()+1) + "," + name;
 				message = Integer.toString(lastUser.getId()+1);
+				user = new User((lastUser.getId()+1), name);
 			} else if (message == "") {
 				nameString = "1," + name;
 				message = "1";
@@ -252,7 +253,7 @@ public class ServerConnector {
 	 * @throws IOException
 	 * @throws FunctionNotDefinedException
 	 * @throws NotFoundException
-	 */ //TODO hier weiterüberarbeiten z.B. foreign keys, fehlermeldungen
+	 */ //TODO hier weiterï¿½berarbeiten z.B. foreign keys, fehlermeldungen
 	public static EinkaufPart getEinkaufPart(int einkaufId, int gastId) throws UnknownHostException, IOException, FunctionNotDefinedException, NotFoundException {
 		initialize(ip, port);
 		String message = "";
@@ -369,6 +370,7 @@ public class ServerConnector {
 		close();
 		return debt;
 	}
+
 	
 	public static float getTotalDebt(int userId) throws UnknownHostException, IOException, FunctionNotDefinedException, NotFoundException{
 		initialize(ip, port);

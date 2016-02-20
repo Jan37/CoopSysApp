@@ -1,11 +1,18 @@
 package com.example.coopsysapp;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
+
+import com.example.coopsysapp.exception.FunctionNotDefinedException;
+import com.example.coopsysapp.exception.NotFoundException;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +24,7 @@ public class MainMenuActivity extends Activity {
 
 	
 	public Button btnDetail, btnAddEinkauf, btnPay;
-	public TextView tvAccount;
+	public TextView tvAccount, tvUsername;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +38,11 @@ public class MainMenuActivity extends Activity {
 		
 	}
 	
+	@Override
+	protected void onStart() {
+
+		super.onStart();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,6 +65,7 @@ public class MainMenuActivity extends Activity {
 	
 	private void initialize() {	
 		tvAccount = (TextView) findViewById(R.id.textView1);
+		tvUsername = (TextView) findViewById(R.id.textViewUsername);
 		
 		btnDetail = (Button) findViewById(R.id.button1);
 		btnAddEinkauf = (Button) findViewById(R.id.button2);
@@ -86,19 +99,27 @@ public class MainMenuActivity extends Activity {
 				
 			}
 		});
+		
+		tvUsername.setText(ServerConnector.getUser().getName());
+		
 	}
 	
 	private class getTotalDebt extends AsyncTask<Void, Integer, Void> {
 		private ProgressDialog progress ;
+		private float account;
 
 		public getTotalDebt(MainMenuActivity activity) {
+			if(progress !=null)
+			{
+			    progress = null;
+			}
 			progress= new ProgressDialog(activity);
 		}
 		
 		@Override
 		protected void onPreExecute() {
 			progress.setMessage("Lade Benutzer, bitte warten ...");
-	        progress.show();
+			progress.show();
 		}
 
 	    @Override
@@ -110,12 +131,38 @@ public class MainMenuActivity extends Activity {
 		protected Void doInBackground(Void... params) {
 					
 			try {
-				tvAccount.setText("+ 25,83 €");
-				tvAccount.setTextColor(Color.GREEN);
+				account = ServerConnector.getTotalDebt(ServerConnector.getUser().getId());
+				if (account==0) {
+					tvAccount.setText("+- 0€");
+					tvAccount.setTextColor(Color.BLACK);
+				}else if (account>0) {
+					tvAccount.setText("+ " + String.valueOf(account));
+					tvAccount.setTextColor(Color.GREEN);
+				}else if (account<0) {
+					tvAccount.setText("- " + String.valueOf(account));
+					tvAccount.setTextColor(Color.RED);
+				}
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
+				tvAccount.setText("Fehler 1");
+				tvAccount.setTextColor(Color.BLACK);
+				e.printStackTrace();
+			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (FunctionNotDefinedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NumberFormatException e) {
+				tvAccount.setText("-NumberFormatE-");
+				tvAccount.setTextColor(Color.RED);
+				Log.e("parseFloat", e.getMessage());
 			}
 			
 			       		return null;
@@ -126,6 +173,7 @@ public class MainMenuActivity extends Activity {
 			if (progress.isShowing()) {
 	        	progress.dismiss();
 	        }
+			//progress=null;
 			super.onPostExecute(result);
 		}
 

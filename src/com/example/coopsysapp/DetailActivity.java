@@ -1,11 +1,13 @@
 package com.example.coopsysapp;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import com.example.coopsysapp.exception.FunctionNotDefinedException;
+import com.example.coopsysapp.exception.NotFoundException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -33,19 +35,7 @@ public class DetailActivity extends Activity {
 		setContentView(R.layout.activity_detail);
 		
 		listview = (ListView) findViewById(R.id.listview);
-	    String[] values = new String[] { "19.02.16 - Marktkauf - Yanick - 11,10 €\n - Du: 5,55 € (+6er Wasser)\n - Richard: 5,55 €\n", 
-	    		"18.02.16 - Netto - Du - 11,10 €\n - Emme: 5,55 € (+6er Wasser)\n - Richard: 5,55 €\n",
-	    		"17.02.16 - Marktkauf - Emme - 11,10 €\n - Du: 5,55 € (+6er Wasser)\n - Richard: 5,55 €\n"};
 	    
-
-	    list = new ArrayList<String>();
-	    for (int i = 0; i < values.length; ++i) {
-	      list.add(values[i]);
-	    }
-	    final StableArrayAdapter adapter = new StableArrayAdapter(this,
-	        android.R.layout.simple_list_item_1, list);
-	    listview.setAdapter(adapter);
-
 //	    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //
 //	        @Override
@@ -114,6 +104,10 @@ public class DetailActivity extends Activity {
 		private ProgressDialog progress ;
 
 		public getEinkaufList(DetailActivity activity) {
+			if(progress !=null)
+			{
+			    progress= null;
+			}
 			progress= new ProgressDialog(activity);
 		}
 		
@@ -133,8 +127,53 @@ public class DetailActivity extends Activity {
 					
 			try {
 				
+				EinkaufPart[] einkaufPartsWithMe = ServerConnector.getPartsForUser((ServerConnector.getUser().getId()));
+				
+				String[] values = new String[einkaufPartsWithMe.length];
+				
+				
+				for (int i = 0; i < einkaufPartsWithMe.length; i++) {
+					StringBuilder item = new StringBuilder();
+					Einkauf einkauf = ServerConnector.getEinkauf(einkaufPartsWithMe[i].getEinkaufId());
+					EinkaufPart[] einkaufPartsEinkauf = ServerConnector.getPartsForEinkauf(einkauf.getId());
+					
+					item.append(einkauf.getDatum() + " - " + einkauf.getName() + " - " + einkauf.getEinkauefer() + "\n");
+					for (int j = 0; j < einkaufPartsEinkauf.length; j++) {
+						item.append(" - " + einkaufPartsEinkauf[j].getGastId() + ": " + einkaufPartsEinkauf[j].getBetrag() 
+								+ " € (" + einkaufPartsEinkauf[j].getNotiz() +")\n");
+					}
+					
+					values[i]= item.toString();					
+				}
+				
+//				String[] values = new String[] { "19.02.16 - Marktkauf - Yanick - 11,10 €\n - Du: 5,55 € (+6er Wasser)\n - Richard: 5,55 €\n", 
+//			    		"18.02.16 - Netto - Du - 11,10 €\n - Emme: 5,55 € (+6er Wasser)\n - Richard: 5,55 €\n",
+//			    		"17.02.16 - Marktkauf - Emme - 11,10 €\n - Du: 5,55 € (+6er Wasser)\n - Richard: 5,55 €\n"};
+//			    
+
+			    list = new ArrayList<String>();
+			    for (int i = 0; i < values.length; ++i) {
+			      list.add(values[i]);
+			    }
+			    final StableArrayAdapter adapter = new StableArrayAdapter(getApplicationContext(),
+			        android.R.layout.simple_list_item_1, list);
+			    listview.setAdapter(adapter);
+
+				
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (FunctionNotDefinedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -143,10 +182,8 @@ public class DetailActivity extends Activity {
 		}
 		@Override
 		protected void onPostExecute(Void result) {
-			
-			if (progress.isShowing()) {
 	        	progress.dismiss();
-	        }
+
 			super.onPostExecute(result);
 		}
 

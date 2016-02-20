@@ -100,7 +100,7 @@ private class getNameList extends AsyncTask<Void, Integer, Void> {
 				
 		try {
 			items = ServerConnector.getNameList();
-			Thread.sleep(2000);
+			Thread.sleep(500);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

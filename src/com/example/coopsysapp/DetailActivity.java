@@ -1,11 +1,18 @@
 package com.example.coopsysapp;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import com.example.coopsysapp.exception.FunctionNotDefinedException;
+import com.example.coopsysapp.exception.NoneFoundException;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,21 +23,23 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class DetailActivity extends Activity {
-
+	
+	ListView listview ;
+	ArrayList<String> list;
+	
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail);
 		
-		final ListView listview = (ListView) findViewById(R.id.listview);
-	    String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-	        "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-	        "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
-	        "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
-	        "Android", "iPhone", "WindowsMobile" };
+		listview = (ListView) findViewById(R.id.listview);
+	    String[] values = new String[] { "19.02.16 - Marktkauf - Yanick - 11,10 €\n - Du: 5,55 € (+6er Wasser)\n - Richard: 5,55 €\n", 
+	    		"18.02.16 - Netto - Du - 11,10 €\n - Emme: 5,55 € (+6er Wasser)\n - Richard: 5,55 €\n",
+	    		"17.02.16 - Marktkauf - Emme - 11,10 €\n - Du: 5,55 € (+6er Wasser)\n - Richard: 5,55 €\n"};
+	    
 
-	    final ArrayList<String> list = new ArrayList<String>();
+	    list = new ArrayList<String>();
 	    for (int i = 0; i < values.length; ++i) {
 	      list.add(values[i]);
 	    }
@@ -38,24 +47,24 @@ public class DetailActivity extends Activity {
 	        android.R.layout.simple_list_item_1, list);
 	    listview.setAdapter(adapter);
 
-	    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-	        @Override
-	        public void onItemClick(AdapterView<?> parent, final View view,
-	            int position, long id) {
-	          final String item = (String) parent.getItemAtPosition(position);
-	          view.animate().setDuration(2000).alpha(0)
-	              .withEndAction(new Runnable() {
-	                @Override
-	                public void run() {
-	                  list.remove(item);
-	                  adapter.notifyDataSetChanged();
-	                  view.setAlpha(1);
-	                }
-	              });
-	        }
-
-	      });
+//	    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//	        @Override
+//	        public void onItemClick(AdapterView<?> parent, final View view,
+//	            int position, long id) {
+//	          final String item = (String) parent.getItemAtPosition(position);
+//	          view.animate().setDuration(2000).alpha(0)
+//	              .withEndAction(new Runnable() {
+//	                @Override
+//	                public void run() {
+//	                  list.remove(item);
+//	                  adapter.notifyDataSetChanged();
+//	                  view.setAlpha(1);
+//	                }
+//	              });
+//	        }
+//
+//	      });
 	}
 
 	@Override
@@ -101,4 +110,46 @@ public class DetailActivity extends Activity {
 	    }
 
 	  }
+	
+	private class getEinkaufList extends AsyncTask<Void, Integer, Void> {
+		private ProgressDialog progress ;
+
+		public getEinkaufList(DetailActivity activity) {
+			progress= new ProgressDialog(activity);
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			progress.setMessage("Lade Benutzer, bitte warten ...");
+	        progress.show();
+		}
+
+	    @Override
+	    protected void onProgressUpdate(Integer... values) {
+	      
+	    }
+
+		@Override
+		protected Void doInBackground(Void... params) {
+					
+			try {
+				
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			       		return null;
+		}
+		@Override
+		protected void onPostExecute(Void result) {
+			
+			if (progress.isShowing()) {
+	        	progress.dismiss();
+	        }
+			super.onPostExecute(result);
+		}
+
+	}
 }

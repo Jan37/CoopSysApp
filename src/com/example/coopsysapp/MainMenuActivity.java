@@ -11,12 +11,15 @@ import android.widget.Button;
 
 public class MainMenuActivity extends Activity {
 
+	
+	Button btnDetail, btnAddEinkauf;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_menu);
 		
-		Button btnDetail = (Button) findViewById(R.id.button1);
+		btnDetail = (Button) findViewById(R.id.button1);
 		
 		btnDetail.setOnClickListener(new OnClickListener() {
 			
@@ -24,6 +27,16 @@ public class MainMenuActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
 	            startActivity(intent);      				
+			}
+		});
+		
+		btnAddEinkauf = (Button) findViewById(R.id.button2);
+		 btnAddEinkauf.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(), AddEinkaufActivity.class);
+	            startActivity(intent);   				
 			}
 		});
 		

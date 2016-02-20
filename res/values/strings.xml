@@ -8,5 +8,6 @@
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_main_menu">MainMenuActivity</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_activity_add_einkauf">AddEinkaufActivity</string>
 
 </resources>

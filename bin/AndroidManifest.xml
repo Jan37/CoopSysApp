@@ -40,6 +40,10 @@
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail" >
         </activity>
+        <activity
+            android:name=".AddEinkaufActivity"
+            android:label="@string/title_activity_add_einkauf" >
+        </activity>
     </application>
 
 </manifest>

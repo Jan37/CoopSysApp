@@ -1,3 +1,3 @@
 # CoopSysApp
 
-Projekt Cooperation Systems
+Cooperation Systems Project

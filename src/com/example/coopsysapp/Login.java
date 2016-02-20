@@ -3,7 +3,7 @@ package com.example.coopsysapp;
 import java.io.IOException;
 
 import com.example.coopsysapp.exception.FunctionNotDefinedException;
-import com.example.coopsysapp.exception.NoneFoundException;
+import com.example.coopsysapp.exception.NotFoundException;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -110,7 +110,7 @@ private class getNameList extends AsyncTask<Void, Integer, Void> {
 		} catch (FunctionNotDefinedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (NoneFoundException e) {
+		} catch (NotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

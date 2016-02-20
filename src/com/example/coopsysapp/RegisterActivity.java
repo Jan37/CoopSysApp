@@ -3,6 +3,7 @@ package com.example.coopsysapp;
 import java.io.IOException;
 
 import com.example.coopsysapp.exception.FunctionNotDefinedException;
+import com.example.coopsysapp.exception.UserAlreadyExistsException;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -90,6 +91,9 @@ public class RegisterActivity extends Activity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (FunctionNotDefinedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UserAlreadyExistsException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

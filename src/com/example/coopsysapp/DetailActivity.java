@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.example.coopsysapp.exception.FunctionNotDefinedException;
-import com.example.coopsysapp.exception.NoneFoundException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

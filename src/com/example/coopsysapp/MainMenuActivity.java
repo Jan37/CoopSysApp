@@ -1,46 +1,37 @@
 package com.example.coopsysapp;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainMenuActivity extends Activity {
 
 	
-	Button btnDetail, btnAddEinkauf;
+	public Button btnDetail, btnAddEinkauf, btnPay;
+	public TextView tvAccount;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_menu);
 		
-		btnDetail = (Button) findViewById(R.id.button1);
+		initialize();
 		
-		btnDetail.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
-	            startActivity(intent);      				
-			}
-		});
+		getTotalDebt task = new getTotalDebt(MainMenuActivity.this);
+		task.execute();
 		
-		btnAddEinkauf = (Button) findViewById(R.id.button2);
-		 btnAddEinkauf.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getApplicationContext(), AddEinkaufActivity.class);
-	            startActivity(intent);   				
-			}
-		});
 		
 	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -59,5 +50,75 @@ public class MainMenuActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private void initialize() {	
+		tvAccount = (TextView) findViewById(R.id.textView1);
+		
+		btnDetail = (Button) findViewById(R.id.button1);
+		btnAddEinkauf = (Button) findViewById(R.id.button3);
+		btnPay = btnAddEinkauf = (Button) findViewById(R.id.button2);
+		
+		btnDetail.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
+	            startActivity(intent);      				
+			}
+		});
+		
+		
+		btnAddEinkauf.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(), AddEinkaufActivity.class);
+	            startActivity(intent);   				
+			}
+		});
+	}
+	
+	private class getTotalDebt extends AsyncTask<Void, Integer, Void> {
+		private ProgressDialog progress ;
+
+		public getTotalDebt(MainMenuActivity activity) {
+			progress= new ProgressDialog(activity);
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			progress.setMessage("Lade Benutzer, bitte warten ...");
+	        progress.show();
+		}
+
+	    @Override
+	    protected void onProgressUpdate(Integer... values) {
+	      
+	    }
+
+		@Override
+		protected Void doInBackground(Void... params) {
+					
+			try {
+				tvAccount.setText("+ 25,83 €");
+				tvAccount.setTextColor(Color.GREEN);
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			       		return null;
+		}
+		@Override
+		protected void onPostExecute(Void result) {
+			
+			if (progress.isShowing()) {
+	        	progress.dismiss();
+	        }
+			super.onPostExecute(result);
+		}
+
 	}
 }

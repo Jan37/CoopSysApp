@@ -290,7 +290,7 @@ public class ServerConnector {
 		return debt;
 	}
 	
-	public static float getTotalDebt(int userId) throws UnknownHostException, IOException, FunctionNotDefinedException{
+	public static float getTotalDebt(int userId) throws UnknownHostException, IOException, FunctionNotDefinedException, NoneFoundException{
 		initialize(ip, port);
 		String message= "";
 		if (!offline) {

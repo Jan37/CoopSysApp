@@ -2,6 +2,8 @@ package com.example.coopsysapp;
 
 import java.io.IOException;
 
+import com.example.coopsysapp.exception.FunctionNotDefinedException;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -85,6 +87,9 @@ public class RegisterActivity extends Activity {
 				index = ServerConnector.register(name);
 				Thread.sleep(2000);
 			} catch (InterruptedException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (FunctionNotDefinedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

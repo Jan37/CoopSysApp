@@ -70,9 +70,10 @@ public final class R {
         public static final int activity_login=0x7f030002;
         public static final int activity_main=0x7f030003;
         public static final int activity_main_menu=0x7f030004;
-        public static final int activity_register=0x7f030005;
-        public static final int custom_spinner_item=0x7f030006;
-        public static final int einkauf_listitem=0x7f030007;
+        public static final int activity_pay=0x7f030005;
+        public static final int activity_register=0x7f030006;
+        public static final int custom_spinner_item=0x7f030007;
+        public static final int einkauf_listitem=0x7f030008;
     }
     public static final class menu {
         public static final int add_einkauf=0x7f070000;
@@ -80,7 +81,8 @@ public final class R {
         public static final int login=0x7f070002;
         public static final int main=0x7f070003;
         public static final int main_menu=0x7f070004;
-        public static final int register=0x7f070005;
+        public static final int pay=0x7f070005;
+        public static final int register=0x7f070006;
     }
     public static final class string {
         public static final int action_settings=0x7f050002;
@@ -90,6 +92,7 @@ public final class R {
         public static final int title_activity_detail=0x7f050006;
         public static final int title_activity_login=0x7f050003;
         public static final int title_activity_main_menu=0x7f050005;
+        public static final int title_activity_pay=0x7f050008;
         public static final int title_activity_register=0x7f050004;
     }
     public static final class style {

@@ -29,7 +29,6 @@ public class MainMenuActivity extends Activity {
 		getTotalDebt task = new getTotalDebt(MainMenuActivity.this);
 		task.execute();
 		
-		
 	}
 	
 
@@ -56,8 +55,8 @@ public class MainMenuActivity extends Activity {
 		tvAccount = (TextView) findViewById(R.id.textView1);
 		
 		btnDetail = (Button) findViewById(R.id.button1);
-		btnAddEinkauf = (Button) findViewById(R.id.button3);
-		btnPay = btnAddEinkauf = (Button) findViewById(R.id.button2);
+		btnAddEinkauf = (Button) findViewById(R.id.button2);
+		btnPay = (Button) findViewById(R.id.button3);
 		
 		btnDetail.setOnClickListener(new OnClickListener() {
 			
@@ -75,6 +74,16 @@ public class MainMenuActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(), AddEinkaufActivity.class);
 	            startActivity(intent);   				
+			}
+		});
+		
+		btnPay.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(), PayActivity.class);
+	            startActivity(intent); 
+				
 			}
 		});
 	}

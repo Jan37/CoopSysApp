@@ -44,6 +44,10 @@
             android:name=".AddEinkaufActivity"
             android:label="@string/title_activity_add_einkauf" >
         </activity>
+        <activity
+            android:name=".PayActivity"
+            android:label="@string/title_activity_pay" >
+        </activity>
     </application>
 
 </manifest>

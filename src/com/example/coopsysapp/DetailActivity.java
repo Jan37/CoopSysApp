@@ -38,7 +38,6 @@ public class DetailActivity extends Activity {
 	        android.R.layout.simple_list_item_1, list);
 	    listview.setAdapter(adapter);
 
-	    
 	    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 	        @Override

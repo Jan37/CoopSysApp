@@ -119,7 +119,7 @@ public class DetailActivity extends Activity {
 		@Override
 		protected void onPreExecute() {
 			progress.setMessage("Lade Einkäufe, bitte warten ...");
-	        progress.show();
+	        //progress.show();
 		}
 
 	    @Override
@@ -152,7 +152,7 @@ public class DetailActivity extends Activity {
 
 				}
 				
-				Log.d("EinkaufListout0", values[0].toString());
+				//Log.d("EinkaufListout0", values[0].toString());
 
 				
 //				String[] values = new String[] { "19.02.16 - Marktkauf - Yanick - 11,10 €\n - Du: 5,55 € (+6er Wasser)\n - Richard: 5,55 €\n", 

@@ -128,9 +128,6 @@ public class AddEinkaufActivity extends Activity {
 			} catch (FunctionNotDefinedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (NotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 			
 			       		return null;
@@ -165,13 +162,16 @@ public class AddEinkaufActivity extends Activity {
 		private ProgressDialog progress;
 
 		public addEinkauf(AddEinkaufActivity activity) {
+			if(progress != null){
+				progress=null;
+			}
 			progress= new ProgressDialog(activity);
 		}
 		
 		@Override
 		protected void onPreExecute() {
 			progress.setMessage("Erstelle Einkauf, bitte warten ...");
-	        progress.show();
+	        //progress.show();
 		}
 
 	    @Override
@@ -192,48 +192,48 @@ public class AddEinkaufActivity extends Activity {
 				Log.d("EinkaufAdded", ServerConnector.einkaufString);
 				Log.d("EinkaufPartPreAdded", ServerConnector.einkaufPartString);
 
-				int gastId = spnGuest1.getSelectedItemPosition()-1;
+				int gastId = spnGuest1.getSelectedItemPosition();
 				float gastBetrag = Float.valueOf(etBetrag1.getText().toString());
 				String gastNote = etNote1.getText().toString();
-				if (gastId>=0) {
+				if (gastId>0) {
 					boolean success = ServerConnector.addEinkaufPart(einkaufId, gastId, gastBetrag, gastNote);
 					Log.d("EinkaufPartAdd1",String.valueOf(success));
 				}
-				
-				gastId = spnGuest2.getSelectedItemPosition();
-				gastBetrag = Float.valueOf(etBetrag2.getText().toString());
-				gastNote = etNote2.getText().toString();
-				if (gastId>0) {
-					ServerConnector.addEinkaufPart(einkaufId, gastId, gastBetrag, gastNote);
-				}
-				
-				gastId = spnGuest3.getSelectedItemPosition();
-				gastBetrag = Float.valueOf(etBetrag3.getText().toString());
-				gastNote = etNote3.getText().toString();
-				if (gastId>0) {
-					ServerConnector.addEinkaufPart(einkaufId, gastId, gastBetrag, gastNote);
-				}
-				
-				gastId = spnGuest4.getSelectedItemPosition();
-				gastBetrag = Float.valueOf(etBetrag4.getText().toString());
-				gastNote = etNote4.getText().toString();
-				if (gastId>0) {
-					ServerConnector.addEinkaufPart(einkaufId, gastId, gastBetrag, gastNote);
-				}
-				
-				gastId = spnGuest5.getSelectedItemPosition();
-				gastBetrag = Float.valueOf(etBetrag5.getText().toString());
-				gastNote = etNote5.getText().toString();
-				if (gastId>0) {
-					ServerConnector.addEinkaufPart(einkaufId, gastId, gastBetrag, gastNote);
-				}
-				
-				gastId = spnGuest6.getSelectedItemPosition();
-				gastBetrag = Float.valueOf(etBetrag6.getText().toString());
-				gastNote = etNote6.getText().toString();
-				if (gastId>0) {
-					ServerConnector.addEinkaufPart(einkaufId, gastId, gastBetrag, gastNote);
-				}
+//				
+//				gastId = spnGuest2.getSelectedItemPosition();
+//				gastBetrag = Float.valueOf(etBetrag2.getText().toString());
+//				gastNote = etNote2.getText().toString();
+//				if (gastId>0) {
+//					ServerConnector.addEinkaufPart(einkaufId, gastId, gastBetrag, gastNote);
+//				}
+//				
+//				gastId = spnGuest3.getSelectedItemPosition();
+//				gastBetrag = Float.valueOf(etBetrag3.getText().toString());
+//				gastNote = etNote3.getText().toString();
+//				if (gastId>0) {
+//					ServerConnector.addEinkaufPart(einkaufId, gastId, gastBetrag, gastNote);
+//				}
+//				
+//				gastId = spnGuest4.getSelectedItemPosition();
+//				gastBetrag = Float.valueOf(etBetrag4.getText().toString());
+//				gastNote = etNote4.getText().toString();
+//				if (gastId>0) {
+//					ServerConnector.addEinkaufPart(einkaufId, gastId, gastBetrag, gastNote);
+//				}
+//				
+//				gastId = spnGuest5.getSelectedItemPosition();
+//				gastBetrag = Float.valueOf(etBetrag5.getText().toString());
+//				gastNote = etNote5.getText().toString();
+//				if (gastId>0) {
+//					ServerConnector.addEinkaufPart(einkaufId, gastId, gastBetrag, gastNote);
+//				}
+//				
+//				gastId = spnGuest6.getSelectedItemPosition();
+//				gastBetrag = Float.valueOf(etBetrag6.getText().toString());
+//				gastNote = etNote6.getText().toString();
+//				if (gastId>0) {
+//					ServerConnector.addEinkaufPart(einkaufId, gastId, gastBetrag, gastNote);
+//				}
 				
 				Log.d("EinkaufPartAdded", ServerConnector.einkaufPartString);
 

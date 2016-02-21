@@ -6,6 +6,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+import android.util.Log;
+
 import com.example.coopsysapp.exception.*;
 
 /**
@@ -328,9 +331,8 @@ public class ServerConnector {
 					int f = 3;
 					String[] debtStrings = debtString.split(";");
 					String[][] debts = new String[debtStrings.length][];
-					for (int i=1; i<debtStrings.length; i++){
+					for (int i=0; i<debtStrings.length; i++){
 						debts[i] = debtStrings[i].split(",");
-						System.out.println(debtStrings[i]+">"+">"+debts[i][0]+"|"+debts[i][1]+"|"+debts[i][2]);
 						if (Integer.parseInt(debts[i][0])==einkauf.getEinkauefer() && Integer.parseInt(debts[i][1])==gastId) {
 							debts[i][2] = Float.toString(Float.parseFloat(debts[i][2]) - betrag);
 							f--;
@@ -338,7 +340,13 @@ public class ServerConnector {
 							debts[i][2] = Float.toString(Float.parseFloat(debts[i][2]) + betrag);
 							f--;
 						}
+						debtStrings[i]=debts[i][0]+","+debts[i][1]+","+debts[i][2];
 					}
+					String newDebtString = "";
+					for (int i = 0;i < debtStrings.length;i++)
+						newDebtString = (newDebtString == "") ? debtStrings[i] : newDebtString + ";" + debtStrings[i];
+						
+					debtString= newDebtString;
 					if (f==1) {
 						message = "1";
 						einkaufPartString = einkaufPartString + ";" + einkaufId + "," + gastId + "," + betrag + "," + notiz;
@@ -559,19 +567,23 @@ public class ServerConnector {
 				}
 			}
 		}
+		close();
 		
 		if (message.startsWith("NotFoundException")) { 
 			throw new NotFoundException(message.split(";")[1], false);
 		}
 		
+		
 		String[] partsStrings = message.split(";");
+		if (message=="") {
+			partsStrings = new String[0];
+		}
 		EinkaufPart[] parts = new EinkaufPart[partsStrings.length];
 		for (int i = 0; i<parts.length;i++) {
 			String[] e = partsStrings[i].split(",");
 			parts[i] = new EinkaufPart(Integer.parseInt(e[0]), Integer.parseInt(e[1]), Float.parseFloat(e[2]), e[3]);
 		}
 		
-		close();
 		return parts;
 	}
 	

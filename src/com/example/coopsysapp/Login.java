@@ -111,9 +111,6 @@ private class getNameList extends AsyncTask<Void, Integer, Void> {
 		} catch (FunctionNotDefinedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (NotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		
 		       		return null;

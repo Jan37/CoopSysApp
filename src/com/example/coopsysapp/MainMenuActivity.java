@@ -136,14 +136,14 @@ public class MainMenuActivity extends Activity {
 			try {
 				account = ServerConnector.getTotalDebt(ServerConnector.getUser().getId());
 				if (account==0) {
-					tvAccount.setText("+- 0€");
+					tvAccount.setText("+- 0 €");
 					tvAccount.setTextColor(Color.BLACK);
 				}else if (account>0) {
-					tvAccount.setText("+ " + String.valueOf(account));
-					tvAccount.setTextColor(Color.GREEN);
-				}else if (account<0) {
-					tvAccount.setText("- " + String.valueOf(account));
+					tvAccount.setText("- " + String.valueOf(account) + " €");
 					tvAccount.setTextColor(Color.RED);
+				}else if (account<0) {
+					tvAccount.setText("+ " + String.valueOf((account*-1)) + " €");
+					tvAccount.setTextColor(Color.GREEN);
 				}
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {

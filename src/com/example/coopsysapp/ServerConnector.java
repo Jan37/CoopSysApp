@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 import com.example.coopsysapp.exception.*;
 
@@ -330,7 +331,8 @@ public class ServerConnector {
 					String[] debtStrings = debtString.split(";");
 					String[][] debts = new String[debtStrings.length][];
 					for (int i=1; i<debtStrings.length; i++){
-						debts[i] = debtString.split(",");
+						debts[i] = debtStrings[i].split(",");
+						System.out.println(debtStrings[i]+">"+">"+debts[i][0]+"|"+debts[i][1]+"|"+debts[i][2]);
 						if (Integer.parseInt(debts[i][0])==einkauf.getEinkauefer() && Integer.parseInt(debts[i][1])==gastId) {
 							debts[i][2] = Float.toString(Float.parseFloat(debts[i][2]) - betrag);
 							f--;
@@ -398,8 +400,8 @@ public class ServerConnector {
 				if (message == "") {
 					String[] debtStrings = debtString.split(";");
 					String[][] debts = new String[debtStrings.length][];
-					for (int i=1; i<debtStrings.length; i++){
-						debts[i] = debtString.split(",");
+					for (int i=0; i<debtStrings.length; i++){
+						debts[i] = debtStrings[i].split(",");
 						if (Integer.parseInt(debts[i][0])==schuldnerId && Integer.parseInt(debts[i][1])==glaubigerId) {
 							message = debts[i][2];
 							break;
@@ -435,25 +437,29 @@ public class ServerConnector {
 				}
 			}
 			if (!found) {
-				message = "-1";
+				message = "NotFoundException;user";
 			}
-			float totalDebt = 0;
-			for (User u: userList) {
-				if (userId != u.getId()) {
-					try {
-						totalDebt += getDebt(userId, u.getId()).getBetrag();
-					} catch (NotFoundException e) {
-						
+			if (message == "") {
+				float totalDebt = 0;
+				for (User u: userList) {
+					if (userId != u.getId()) {
+						try {
+							totalDebt += getDebt(userId, u.getId()).getBetrag();
+						} catch (NotFoundException e) {
+							
+						}
 					}
 				}
+				message = Float.toString(totalDebt);
 			}
-			message = Float.toString(totalDebt);
+			
+		}
+		close();
+		
+		if (message.startsWith("NotFoundException")) { 
+			throw new NotFoundException(message.split(";")[1], false);
 		}
 		
-		close();
-		if (message == "-1") { //if the given user is not existant
-			throw new NotFoundException("user", false);
-		}
 		return Float.parseFloat(message);
 	}
 	

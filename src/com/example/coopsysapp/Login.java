@@ -24,8 +24,8 @@ public class Login extends Activity {
 
 	public Button btnLogin;
 	public Spinner spnDropDown;
-	String[] adapterItems= {};
-	User[] items ={};
+	public String[] adapterItems= {};
+	public User[] items ={};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

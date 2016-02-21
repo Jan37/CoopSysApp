@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 
 import com.example.coopsysapp.exception.FunctionNotDefinedException;
 import com.example.coopsysapp.exception.NotFoundException;
+import com.example.coopsysapp.util.Dialogs;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -107,13 +108,15 @@ public class MainMenuActivity extends Activity {
 	private class getTotalDebt extends AsyncTask<Void, Integer, Void> {
 		private ProgressDialog progress ;
 		private float account;
-
+		private MainMenuActivity activity;
+		
 		public getTotalDebt(MainMenuActivity activity) {
 			if(progress !=null)
 			{
 			    progress = null;
 			}
 			progress= new ProgressDialog(activity);
+			this.activity=activity;
 		}
 		
 		@Override

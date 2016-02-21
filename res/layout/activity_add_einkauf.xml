@@ -37,7 +37,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
-            android:id="@+id/editText1"
+            android:id="@+id/etEinkaufName"
             android:layout_gravity="fill_horizontal" />
 
         <TextView
@@ -47,7 +47,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/etEinkaufBetrag"
             android:layout_gravity="fill_horizontal"
             android:inputType="numberDecimal" />
     </GridLayout>
@@ -71,13 +71,13 @@
                 android:rowCount="6" >
 
                 <Spinner
-                    android:id="@+id/spinner1"
+                    android:id="@+id/spnGuest1"
                     android:layout_width="100sp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="fill_horizontal" />
 
                 <EditText
-                    android:id="@+id/editText3"
+                    android:id="@+id/etBetrag1"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal"
                     android:ems="10"
@@ -85,97 +85,97 @@
 
 
                 <EditText
-                    android:id="@+id/editText9"
+                    android:id="@+id/etNote1"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal"
                     android:ems="10" />
 
                 <Spinner
-                    android:id="@+id/spinner2"
+                    android:id="@+id/spnGuest2"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal" />
 
                 <EditText
-                    android:id="@+id/editText4"
+                    android:id="@+id/etBetrag2"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal"
                     android:ems="10"
                     android:inputType="numberDecimal" />
 
                 <EditText
-                    android:id="@+id/editText10"
+                    android:id="@+id/etNote2"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal"
                     android:ems="10" />
 
                 <Spinner
-                    android:id="@+id/spinner3"
+                    android:id="@+id/spnGuest3"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal" />
 
                 <EditText
-                    android:id="@+id/editText5"
+                    android:id="@+id/etBetrag3"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal"
                     android:ems="10"
                     android:inputType="numberDecimal" />
 
                 <EditText
-                    android:id="@+id/editText11"
+                    android:id="@+id/etNote3"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal"
                     android:ems="10" />
 
                 <Spinner
-                    android:id="@+id/spinner4"
+                    android:id="@+id/spnGuest4"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal" />
 
                 <EditText
-                    android:id="@+id/editText6"
+                    android:id="@+id/etBetrag4"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal"
                     android:ems="10"
                     android:inputType="numberDecimal" />
 
                 <EditText
-                    android:id="@+id/editText12"
+                    android:id="@+id/etNote4"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal"
                     android:ems="10" />
 
                 <Spinner
-                    android:id="@+id/spinner5"
+                    android:id="@+id/spnGuest5"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal" />
 
                 <EditText
-                    android:id="@+id/editText7"
+                    android:id="@+id/etBetrag5"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal"
                     android:ems="10"
                     android:inputType="numberDecimal" />
 
                 <EditText
-                    android:id="@+id/editText13"
+                    android:id="@+id/etNote5"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal"
                     android:ems="10" />
 
                 <Spinner
-                    android:id="@+id/spinner6"
+                    android:id="@+id/spnGuest6"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal" />
 
                 <EditText
-                    android:id="@+id/editText8"
+                    android:id="@+id/etBetrag6"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal"
                     android:ems="10"
                     android:inputType="numberDecimal" />
 
                 <EditText
-                    android:id="@+id/editText14"
+                    android:id="@+id/etNote6"
                     android:layout_width="100sp"
                     android:layout_gravity="fill_horizontal"
                     android:ems="10" />
@@ -185,10 +185,19 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/btnEinkaufOk"
         android:layout_below="@id/scrollView1"
-        android:layout_width="300sp"
+        android:layout_width="200sp"
         android:layout_height="wrap_content"
         android:text="Einkauf bestätigen" />
+
+        <ImageButton
+            android:id="@+id/btnVerteilen"
+            android:layout_width="50sp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/btnEinkaufOk"
+            android:layout_alignRight="@+id/scrollView1"
+            android:layout_below="@+id/scrollView1"
+            android:background="@android:drawable/ic_menu_rotate" />
 
 </RelativeLayout>

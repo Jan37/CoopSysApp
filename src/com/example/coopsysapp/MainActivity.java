@@ -1,5 +1,7 @@
 package com.example.coopsysapp;
 
+import com.example.coopsysapp.util.Dialogs;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

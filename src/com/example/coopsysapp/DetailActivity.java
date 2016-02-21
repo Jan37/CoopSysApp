@@ -15,6 +15,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,6 +55,10 @@ public class DetailActivity extends Activity {
 //	        }
 //
 //	      });
+		
+		getEinkaufList task = new getEinkaufList(DetailActivity.this);
+		task.execute();
+		
 	}
 
 	@Override
@@ -113,7 +118,7 @@ public class DetailActivity extends Activity {
 		
 		@Override
 		protected void onPreExecute() {
-			progress.setMessage("Lade Benutzer, bitte warten ...");
+			progress.setMessage("Lade Einkäufe, bitte warten ...");
 	        progress.show();
 		}
 
@@ -128,7 +133,6 @@ public class DetailActivity extends Activity {
 			try {
 				
 				EinkaufPart[] einkaufPartsWithMe = ServerConnector.getPartsForUser((ServerConnector.getUser().getId()));
-				
 				String[] values = new String[einkaufPartsWithMe.length];
 				
 				
@@ -143,8 +147,13 @@ public class DetailActivity extends Activity {
 								+ " € (" + einkaufPartsEinkauf[j].getNotiz() +")\n");
 					}
 					
-					values[i]= item.toString();					
+					values[i]= item.toString();	
+					Log.d("EinkaufList" + i, values[i].toString());
+
 				}
+				
+				Log.d("EinkaufListout0", values[0].toString());
+
 				
 //				String[] values = new String[] { "19.02.16 - Marktkauf - Yanick - 11,10 €\n - Du: 5,55 € (+6er Wasser)\n - Richard: 5,55 €\n", 
 //			    		"18.02.16 - Netto - Du - 11,10 €\n - Emme: 5,55 € (+6er Wasser)\n - Richard: 5,55 €\n",
@@ -155,6 +164,8 @@ public class DetailActivity extends Activity {
 			    for (int i = 0; i < values.length; ++i) {
 			      list.add(values[i]);
 			    }
+			    list.add(ServerConnector.einkaufString);
+			    list.add(ServerConnector.einkaufPartString);
 			    final StableArrayAdapter adapter = new StableArrayAdapter(getApplicationContext(),
 			        android.R.layout.simple_list_item_1, list);
 			    listview.setAdapter(adapter);

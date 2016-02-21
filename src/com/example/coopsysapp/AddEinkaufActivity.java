@@ -1,17 +1,12 @@
 package com.example.coopsysapp;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-
-import com.example.coopsysapp.exception.FunctionNotDefinedException;
-import com.example.coopsysapp.exception.NotFoundException;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.format.Time;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +16,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+
+import com.example.coopsysapp.exception.FunctionNotDefinedException;
+import com.example.coopsysapp.exception.NotFoundException;
 
 public class AddEinkaufActivity extends Activity {
 	
@@ -186,14 +184,20 @@ public class AddEinkaufActivity extends Activity {
 					
 			try {
 				//TODO Date
+				Log.d("EinkaufPreAdded", ServerConnector.einkaufString);
+
 				int einkaufId = ServerConnector.addEinkauf(ServerConnector.getUser().getId(), 
 						etEinkaufName.getText().toString(), "21-02-2016");
 				
-				int gastId = spnGuest1.getSelectedItemPosition();
+				Log.d("EinkaufAdded", ServerConnector.einkaufString);
+				Log.d("EinkaufPartPreAdded", ServerConnector.einkaufPartString);
+
+				int gastId = spnGuest1.getSelectedItemPosition()-1;
 				float gastBetrag = Float.valueOf(etBetrag1.getText().toString());
 				String gastNote = etNote1.getText().toString();
-				if (gastId>0) {
-					ServerConnector.addEinkaufPart(einkaufId, gastId, gastBetrag, gastNote);
+				if (gastId>=0) {
+					boolean success = ServerConnector.addEinkaufPart(einkaufId, gastId, gastBetrag, gastNote);
+					Log.d("EinkaufPartAdd1",String.valueOf(success));
 				}
 				
 				gastId = spnGuest2.getSelectedItemPosition();
@@ -231,7 +235,8 @@ public class AddEinkaufActivity extends Activity {
 					ServerConnector.addEinkaufPart(einkaufId, gastId, gastBetrag, gastNote);
 				}
 				
-				
+				Log.d("EinkaufPartAdded", ServerConnector.einkaufPartString);
+
 				
 				Thread.sleep(500);
 			} catch (IOException e) {

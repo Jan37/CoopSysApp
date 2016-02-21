@@ -28,7 +28,7 @@ public final class R {
     }
     public static final class id {
         public static final int LinearLayout1=0x7f08001b;
-        public static final int action_settings=0x7f080028;
+        public static final int action_settings=0x7f080029;
         public static final int btnEinkaufOk=0x7f080019;
         public static final int btnVerteilen=0x7f08001a;
         public static final int button1=0x7f080020;
@@ -54,6 +54,7 @@ public final class R {
         public static final int firstLine=0x7f080027;
         public static final int gridLayout1=0x7f080001;
         public static final int icon=0x7f080025;
+        public static final int list_content=0x7f080028;
         public static final int listview=0x7f08001c;
         public static final int scrollView1=0x7f080006;
         public static final int secondLine=0x7f080026;
@@ -79,6 +80,7 @@ public final class R {
         public static final int activity_register=0x7f030006;
         public static final int custom_spinner_item=0x7f030007;
         public static final int einkauf_listitem=0x7f030008;
+        public static final int listitem_black=0x7f030009;
     }
     public static final class menu {
         public static final int add_einkauf=0x7f070000;

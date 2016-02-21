@@ -6,8 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Arrays;
-
 import com.example.coopsysapp.exception.*;
 
 /**
@@ -363,8 +361,8 @@ public class ServerConnector {
 	
 	/**
 	 * Returns the Debt between two users.
-	 * @param schuldnerId
-	 * @param glaubigerId
+	 * @param schuldnerId Id of schuldner
+	 * @param glaubigerId Id of glaubiger
 	 * @return the Debt of the user on the other user
 	 * @throws UnknownHostException
 	 * @throws IOException
@@ -421,7 +419,15 @@ public class ServerConnector {
 		return debt;
 	}
 
-	//TODO weiterarbeiten
+	/**
+	 * Get the total debt of a User
+	 * @param userId of the User
+	 * @return the total debt of a user
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 * @throws FunctionNotDefinedException
+	 * @throws NotFoundException
+	 */
 	public static float getTotalDebt(int userId) throws UnknownHostException, IOException, FunctionNotDefinedException, NotFoundException{
 		initialize(ip, port);
 		String message= "";
@@ -463,20 +469,47 @@ public class ServerConnector {
 		return Float.parseFloat(message);
 	}
 	
-	public static Einkauf[] getEinkaufe(int einkauferId) throws UnknownHostException, IOException, FunctionNotDefinedException {
+	/**
+	 * Returns all eikaufs of a user
+	 * @param einkauferId the id of the einkaufer
+	 * @return all einkaufs the user buyed
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 * @throws FunctionNotDefinedException
+	 * @throws NotFoundException 
+	 */
+	public static Einkauf[] getEinkaufe(int einkauferId) throws UnknownHostException, IOException, FunctionNotDefinedException, NotFoundException {
 		initialize(ip, port);
 		String message= "";
 		if (!offline) {
 			message = sendFunction("getEinkaufe("+ einkauferId +")");
 		}else {
-			String[] einkaufeStrings = einkaufString.split(";");
-			for (String einkauf: einkaufeStrings) {
-				String[] e = einkauf.split(",");
-				if (Integer.parseInt(e[1]) == einkauferId) {
-					message = (message != "") ? message + ";" : message;
-				message = message + einkauf;	
+			User[] userList = getNameList();
+			boolean found = false;
+			for (User u: userList) {
+				if (u.getId() == einkauferId) {
+					found = true;
+					break;
 				}
 			}
+			if (!found) {
+				message = "NotFoundException;user";
+			}
+			if (message == "") {
+				String[] einkaufeStrings = einkaufString.split(";");
+				for (String einkauf: einkaufeStrings) {
+					String[] e = einkauf.split(",");
+					if (Integer.parseInt(e[1]) == einkauferId) {
+						message = (message != "") ? message + ";" : message;
+					message = message + einkauf;	
+					}
+				}
+			}
+		}
+		close();
+		
+		if (message.startsWith("NotFoundException")) { 
+			throw new NotFoundException(message.split(";")[1], false);
 		}
 		
 		String[] einkaufeStrings = message.split(";");
@@ -486,24 +519,49 @@ public class ServerConnector {
 			einkaufe[i] = new Einkauf(Integer.parseInt(e[0]), Integer.parseInt(e[1]), e[2], e[3]);
 		}
 		
-		close();
 		return einkaufe;
 	}
 	
-	public static EinkaufPart[] getPartsForUser(int gastId) throws UnknownHostException, IOException, FunctionNotDefinedException {
+	/**
+	 * returns the einkaufparts of a user
+	 * @param gastId Id of the gast
+	 * @return all einkaufParts of the gast
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 * @throws FunctionNotDefinedException
+	 * @throws NotFoundException 
+	 */
+	public static EinkaufPart[] getPartsForUser(int gastId) throws UnknownHostException, IOException, FunctionNotDefinedException, NotFoundException {
 		initialize(ip, port);
 		String message= "";
 		if (!offline) {
 			message = sendFunction("getPartsForUser("+ gastId +")");
 		}else {
-			String[] partsStrings = einkaufPartString.split(";");
-			for (String part: partsStrings) {
-				String[] e = part.split(",");
-				if (Integer.parseInt(e[1]) == gastId) {
-					message = (message != "") ? message + ";" : message;
-				message = message + part;	
+			User[] userList = getNameList();
+			boolean found = false;
+			for (User u: userList) {
+				if (u.getId() == gastId) {
+					found = true;
+					break;
 				}
 			}
+			if (!found) {
+				message = "NotFoundException;user";
+			}
+			if (message == "") {
+				String[] partsStrings = einkaufPartString.split(";");
+				for (String part: partsStrings) {
+					String[] e = part.split(",");
+					if (Integer.parseInt(e[1]) == gastId) {
+						message = (message != "") ? message + ";" : message;
+					message = message + part;	
+					}
+				}
+			}
+		}
+		
+		if (message.startsWith("NotFoundException")) { 
+			throw new NotFoundException(message.split(";")[1], false);
 		}
 		
 		String[] partsStrings = message.split(";");
@@ -517,20 +575,43 @@ public class ServerConnector {
 		return parts;
 	}
 	
-	public static EinkaufPart[] getPartsForEinkauf(int einkaufId) throws UnknownHostException, IOException, FunctionNotDefinedException {
+	/**
+	 * returns the Parts of an einkauf
+	 * @param einkaufId Id of the einkauf
+	 * @return all PArts fo the einkauf
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 * @throws FunctionNotDefinedException
+	 * @throws NotFoundException 
+	 */
+	public static EinkaufPart[] getPartsForEinkauf(int einkaufId) throws UnknownHostException, IOException, FunctionNotDefinedException, NotFoundException {
 		initialize(ip, port);
 		String message= "";
 		if (!offline) {
 			message = sendFunction("getPartsForEinkauf("+ einkaufId +")");
 		}else {
-			String[] partsStrings = einkaufPartString.split(";");
-			for (String part: partsStrings) {
-				String[] e = part.split(",");
-				if (Integer.parseInt(e[0]) == einkaufId) {
-					message = (message != "") ? message + ";" : message;
-				message = message + part;	
+			@SuppressWarnings("unused")
+			Einkauf einkauf = null;
+			try {
+				einkauf = getEinkauf(einkaufId);
+			} catch (NotFoundException e) {
+				message = "NotFoundException;einkauf";
+			}
+			if (message == "") {
+				String[] partsStrings = einkaufPartString.split(";");
+				for (String part: partsStrings) {
+					String[] e = part.split(",");
+					if (Integer.parseInt(e[0]) == einkaufId) {
+						message = (message != "") ? message + ";" : message;
+					message = message + part;	
+					}
 				}
 			}
+		}
+		close();
+		
+		if (message.startsWith("NotFoundException")) { 
+			throw new NotFoundException(message.split(";")[1], false);
 		}
 		
 		String[] partsStrings = message.split(";");
@@ -540,7 +621,6 @@ public class ServerConnector {
 			parts[i] = new EinkaufPart(Integer.parseInt(e[0]), Integer.parseInt(e[1]), Float.parseFloat(e[2]), e[3]);
 		}
 		
-		close();
 		return parts;
 	}
 

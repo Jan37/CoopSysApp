@@ -17,6 +17,11 @@ import com.example.coopsysapp.exception.*;
  *FunctionNotFoundException;<function> : Returned if the function name is not valid
  *NotFoundException;<SearchedItem> : Returned if something is not found
  *UserAlreadyExistsException;<name> : Returned if the user that is tried to create already exists
+ *
+ *Server works as follows
+ *1.: check if function is valid, else FunctionNotoundException
+ *2.: check if values are valid, else NotFoundExceptien (or UserAlreadyExistsException)
+ *3.: do what must be done
  */
 public class ServerConnector {
 	
@@ -31,7 +36,7 @@ public class ServerConnector {
 	public static String nameString = new String("1,Emme;2,Lars;3,Kristof");
 	public static String einkaufString = new String("1,1,Marktkauf,01-01-16");
 	public static String einkaufPartString = new String("1,2,5.55,dein Teil;1,3,5.55,dein Teil");
-	public static String debtString= new String("1,2,-5.55;1,3,-5.55;2,1,5.55;2,3,0;3,1,5.55;3,2,0;");
+	public static String debtString= new String("1,2,-5.55;1,3,-5.55;2,1,5.55;2,3,0;3,1,5.55;3,2,0");
 	
 	private ServerConnector() {
 		
@@ -75,9 +80,8 @@ public class ServerConnector {
 	 * @return List of all Users
 	 * @throws IOException
 	 * @throws FunctionNotDefinedException 
-	 * @throws NotFoundException 
 	 */
-	public static User[] getNameList() throws IOException, FunctionNotDefinedException, NotFoundException{
+	public static User[] getNameList() throws IOException, FunctionNotDefinedException {
 		initialize("192.168.42.1", 5000);
 		String message = "";
 		if (!offline) {
@@ -86,11 +90,6 @@ public class ServerConnector {
 			message = nameString;
 		}
 		close();
-		
-		if (message.startsWith("NotFoundException")) {
-			String[] m = message.split(";");
-			throw new NotFoundException(m[1], true);
-		}
 		
 		String[] userStrings = message.split(";");
 		User[] users = new User[userStrings.length];
@@ -116,12 +115,7 @@ public class ServerConnector {
 		if (!offline) {
 			message = sendFunction("register("+ name +")");
 		}else {
-			User[] userList;
-			try {
-				userList = getNameList();
-			} catch (NotFoundException e) {
-				userList = new User[0];
-			}
+			User[] userList = getNameList();
 			
 			for (User user : userList) {
 				if (user.getName().equalsIgnoreCase(name)) {
@@ -136,7 +130,6 @@ public class ServerConnector {
 				}
 				nameString= nameString + ";" + (lastUser.getId()+1) + "," + name;
 				message = Integer.toString(lastUser.getId()+1);
-				user = new User((lastUser.getId()+1), name);
 			} else if (message == "") {
 				nameString = "1," + name;
 				message = "1";
@@ -209,28 +202,28 @@ public class ServerConnector {
 		if (!offline) {
 			message = sendFunction("addEinkauf("+ einkauferId + "," + name + "," + datum + "," +")");
 		}else {
-			int lastEinkaufId;
-			if (einkaufString != ""){
-				lastEinkaufId= Integer.parseInt(einkaufString.split(";")[einkaufString.split(";").length-1].split(",")[0]);
-				einkaufString = einkaufString + ";" + (lastEinkaufId+1) + "," + einkauferId + ","
-						+ "" + name + "," + datum;
-			} else {
-				lastEinkaufId = 0;
-				einkaufString = (lastEinkaufId+1) + "," + einkauferId + ","
-						+ "" + name + "," + datum;
-			}
-			User[] userList;
-			try {
-				userList = getNameList();
-			} catch (NotFoundException e) {
-				userList = new User[0];
-			}
+			User[] userList = getNameList();
+			boolean found = false;
 			for (User u: userList) {
 				if (u.getId() == einkauferId) {
-					message = "NotFoundException;einkaufer";
+					found = true;
 				}
 			}
+			if (!found) {
+					message = "NotFoundException;einkaufer";
+			}
+			
 			if (message == "") {
+				int lastEinkaufId;
+				if (einkaufString != ""){
+					lastEinkaufId= Integer.parseInt(einkaufString.split(";")[einkaufString.split(";").length-1].split(",")[0]);
+					einkaufString = einkaufString + ";" + (lastEinkaufId+1) + "," + einkauferId + ","
+							+ "" + name + "," + datum;
+				} else {
+					lastEinkaufId = 0;
+					einkaufString = (lastEinkaufId+1) + "," + einkauferId + ","
+							+ "" + name + "," + datum;
+				}
 				message = Integer.toString(lastEinkaufId+1);
 			}
 		}
@@ -238,7 +231,7 @@ public class ServerConnector {
 		
 		if (message.startsWith("NotFoundException")) {
 			String[] m = message.split(";");
-			throw new NotFoundException(m[1], true);
+			throw new NotFoundException(m[1], false);
 		}
 		
 		return Integer.parseInt(message);
@@ -246,90 +239,123 @@ public class ServerConnector {
 	
 	/**
 	 * returns a EinkaufPart
-	 * @param einkaufId
-	 * @param gastId
+	 * @param einkaufId Id of einkaufer
+	 * @param gastId Id of gast
 	 * @return The EinkaufPart that was specified
 	 * @throws UnknownHostException
 	 * @throws IOException
 	 * @throws FunctionNotDefinedException
 	 * @throws NotFoundException
-	 */ //TODO hier weiter�berarbeiten z.B. foreign keys, fehlermeldungen
+	 */
 	public static EinkaufPart getEinkaufPart(int einkaufId, int gastId) throws UnknownHostException, IOException, FunctionNotDefinedException, NotFoundException {
 		initialize(ip, port);
 		String message = "";
 		if (!offline) {
 			message = sendFunction("getEinkaufPart("+ einkaufId + "," + gastId +")");
 		}else {
-			String[] itemsfirst = einkaufPartString.split(";");
-			for (int i = 0; i < itemsfirst.length; i++) {
-				String[] temp = itemsfirst[i].split(",");
-				if (Integer.valueOf(temp[0]) == einkaufId && Integer.valueOf(temp[1]) == gastId) {
-					message = temp[2] + "," + temp[3];
-					break;
+			User[] userList = getNameList();
+			boolean found = false;
+			for (User u: userList) {
+				if (u.getId() == gastId) {
+					found = true;
 				}
 			}
-			if (message == "") {
-				message = "null";
+			if (!found) {
+					message = "NotFoundException;einkaufer";
 			}
+			if (message == "") {
+				String[] itemsfirst = einkaufPartString.split(";");
+				for (int i = 0; i < itemsfirst.length; i++) {
+					String[] temp = itemsfirst[i].split(",");
+					if (Integer.valueOf(temp[0]) == einkaufId && Integer.valueOf(temp[1]) == gastId) {
+						message = temp[2] + "," + temp[3];
+						break;
+					}
+				}
+				if (message == "") {
+					message = "NotFoundException;einkaufPart";
+				}
+			}
+		}
+		close();
+		
+		if (message.startsWith("NotFoundException")) {
+			throw new NotFoundException(message.split(";")[1], false);
 		}
 		
 		EinkaufPart einkaufPart = null;
-		if (message != "null") { //TODO fehlermeldung überarbeiten?
-			String[] temp = message.split(",");
-			einkaufPart = new EinkaufPart(einkaufId,gastId, Float.parseFloat(temp[0]), temp[1]);
-		} else {
-			throw new NotFoundException("einkaufPart", false);
-		}
+		String[] temp = message.split(",");
+		einkaufPart = new EinkaufPart(einkaufId,gastId, Float.parseFloat(temp[0]), temp[1]);
 		
-		close();
 		return einkaufPart;
-		
 	}
 	
 	/**
 	 * Adds a new EinkaufPart for an existing Einkauf
-	 * @param einkaufId
-	 * @param gastId
-	 * @param betrag
-	 * @param notiz
+	 * @param einkaufId Id of einkauf
+	 * @param gastId Id of gast
+	 * @param betrag value of einkauf
+	 * @param notiz descreption of part
 	 * @return whether it was successful
 	 * @throws UnknownHostException
 	 * @throws IOException
 	 * @throws FunctionNotDefinedException
+	 * @throws NotFoundException 
 	 */
-	public static boolean addEinkaufPart(int einkaufId, int gastId, float betrag, String notiz) throws UnknownHostException, IOException, FunctionNotDefinedException {
+	public static boolean addEinkaufPart(int einkaufId, int gastId, float betrag, String notiz) throws UnknownHostException, IOException, FunctionNotDefinedException, NotFoundException {
 		initialize(ip, port);
 		String message= "";
 		if (!offline) {
 			message = sendFunction("addEinkaufPart("+ einkaufId + "," + gastId + "," + betrag + "," + notiz +")");
 		}else {
-			int f = 3;
-			String[] debtStrings = debtString.split(";");
-			String[][] debts = new String[debtStrings.length][];
-			for (int i=1; i<debtStrings.length; i++){
-				debts[i] = debtString.split(",");
-				try {
-					Einkauf einkauf = getEinkauf(einkaufId);
-					if (Integer.parseInt(debts[i][0])==einkauf.getEinkauefer() && Integer.parseInt(debts[i][1])==gastId) {
-						debts[i][2] = Float.toString(Float.parseFloat(debts[i][2]) - betrag);
-						f--;
-					} else if (Integer.parseInt(debts[i][1])==einkauf.getEinkauefer() && Integer.parseInt(debts[i][0])==gastId) {
-						debts[i][2] = Float.toString(Float.parseFloat(debts[i][2]) + betrag);
-						f--;
+			Einkauf einkauf = null;
+			try {
+				einkauf = getEinkauf(einkaufId);
+			} catch (NotFoundException e) {
+				message = "NotFoundException;einkauf";
+			}
+			if (message == "") {
+				User[] userList = getNameList();
+				boolean found = false;
+				for (User u: userList) {
+					if (u.getId() == gastId) {
+						found = true;
 					}
-				} catch (NotFoundException e) {
-					
+				}
+				if (!found) {
+						message = "NotFoundException;gast";
+				}
+				if (message == "") {
+					int f = 3;
+					String[] debtStrings = debtString.split(";");
+					String[][] debts = new String[debtStrings.length][];
+					for (int i=1; i<debtStrings.length; i++){
+						debts[i] = debtString.split(",");
+						if (Integer.parseInt(debts[i][0])==einkauf.getEinkauefer() && Integer.parseInt(debts[i][1])==gastId) {
+							debts[i][2] = Float.toString(Float.parseFloat(debts[i][2]) - betrag);
+							f--;
+						} else if (Integer.parseInt(debts[i][1])==einkauf.getEinkauefer() && Integer.parseInt(debts[i][0])==gastId) {
+							debts[i][2] = Float.toString(Float.parseFloat(debts[i][2]) + betrag);
+							f--;
+						}
+					}
+					if (f==1) {
+						message = "1";
+						einkaufPartString = einkaufPartString + ";" + einkaufId + "," + gastId + "," + betrag + "," + notiz;
+					} else {
+						message = "0";
+					}
 				}
 			}
-			if (f==1) {
-				message = "1";
-				einkaufPartString = einkaufPartString + ";" + einkaufId + "," + gastId + "," + betrag + "," + notiz;
-			} else {
-				message = "0";
-			}
+			
+			
+		}
+		close();
+		
+		if (message.startsWith("NotFoundException")) {
+			throw new NotFoundException(message.split(";")[1], false);
 		}
 		
-		close();
 		return Boolean.parseBoolean(message);
 	}
 	
@@ -349,41 +375,58 @@ public class ServerConnector {
 		if (!offline) {
 			message = sendFunction("getDebt("+ schuldnerId + "," + glaubigerId +")");
 		}else {
-			String[] debtStrings = debtString.split(";");
-			String[][] debts = new String[debtStrings.length][];
-			for (int i=1; i<debtStrings.length; i++){
-				debts[i] = debtString.split(",");
-				if (Integer.parseInt(debts[i][0])==schuldnerId && Integer.parseInt(debts[i][1])==glaubigerId) {
-					message = debts[i][2];
-					break;
+			User[] userList = getNameList();
+			boolean found = false;
+			for (User u: userList) {
+				if (u.getId() == schuldnerId) {
+					found = true;
 				}
 			}
+			if (!found) {
+					message = "NotFoundException;schuldner";
+			}
+			if (message == "") {
+				found = false;
+				for (User u: userList) {
+					if (u.getId() == glaubigerId) {
+						found = true;
+					}
+				}
+				if (!found) {
+						message = "NotFoundException;glaubiger";
+				}
+				if (message == "") {
+					String[] debtStrings = debtString.split(";");
+					String[][] debts = new String[debtStrings.length][];
+					for (int i=1; i<debtStrings.length; i++){
+						debts[i] = debtString.split(",");
+						if (Integer.parseInt(debts[i][0])==schuldnerId && Integer.parseInt(debts[i][1])==glaubigerId) {
+							message = debts[i][2];
+							break;
+						}
+					}
+				}
+			}
+			
 		}
-		
-		Debt debt = null;
-		if (message != "") {
-			debt = new Debt(schuldnerId, glaubigerId, Float.parseFloat(message));
-		} else {
-			throw new NotFoundException("debt", false);
-		}
-		
 		close();
+		
+		if (message.startsWith("NotFoundException")) {
+			throw new NotFoundException(message.split(";")[1], false);
+		}
+		
+		Debt debt = new Debt(schuldnerId, glaubigerId, Float.parseFloat(message));
 		return debt;
 	}
 
-	
+	//TODO weiterarbeiten
 	public static float getTotalDebt(int userId) throws UnknownHostException, IOException, FunctionNotDefinedException, NotFoundException{
 		initialize(ip, port);
 		String message= "";
 		if (!offline) {
 			message = sendFunction("getTotalDebt("+ userId +")");
 		}else {
-			User[] userList;
-			try {
-				userList = getNameList();
-			} catch (NotFoundException e) {
-				userList = new User[0];
-			}
+			User[] userList = getNameList();
 			boolean found = false;
 			for (User u: userList) {
 				if (u.getId() == userId) {

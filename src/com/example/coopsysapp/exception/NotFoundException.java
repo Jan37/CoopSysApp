@@ -18,6 +18,6 @@ public class NotFoundException extends Exception{
 		if (multiple) {
 			return("No " + searchedItem + "s were found");
 		}
-		return("The "+ searchedItem + " was not found.");
+		return("The given "+ searchedItem + " was not found.");
 	}
 }

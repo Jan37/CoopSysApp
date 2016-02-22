@@ -7,8 +7,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import android.util.Log;
-
 import com.example.coopsysapp.exception.*;
 
 /**
@@ -263,7 +261,7 @@ public class ServerConnector {
 				}
 			}
 			if (!found) {
-					message = "NotFoundException;einkaufer";
+					message = "NotFoundException;gast";
 			}
 			if (message == "") {
 				String[] itemsfirst = einkaufPartString.split(";");

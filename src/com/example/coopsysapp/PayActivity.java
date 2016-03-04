@@ -209,6 +209,7 @@ public class PayActivity extends Activity {
 	
 	private class getNameList extends AsyncTask<Void, Integer, Void> {
 		private ProgressDialog pdia;
+		private String errorMessage="";
 
     	public getNameList() {
     	}
@@ -233,23 +234,23 @@ public class PayActivity extends Activity {
     			Data.getInstance().setUserList(userlist);
     			Thread.sleep(500);
     		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		} catch (InterruptedException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		} catch (FunctionNotDefinedException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		}
-    		
-    		
-
-    		       		return null;
+    		return null;
     	}
+    	
     	@Override
     	protected void onPostExecute(Void result) {
     		super.onPostExecute(result);
+    		
+    		if (!errorMessage.matches("")) {
+				Dialogs.messageDialog(PayActivity.this, "Fehler", errorMessage);
+			}
+    		
     		adapterItems = new String[Data.getInstance().getUserList().length+1];
     		for (int i = 0; i < adapterItems.length; i++) {
     			if (i==0) {
@@ -267,7 +268,7 @@ public class PayActivity extends Activity {
 	
 	private class Pay extends AsyncTask<Void, Integer, Void> {
 		private ProgressDialog pdia;
-		private String error=null;
+		private String errorMessage ="";
     	public Pay() {
     	}
     	
@@ -292,17 +293,13 @@ public class PayActivity extends Activity {
     			einkauf = ServerConnector.addEinkauf(ServerConnector.getUser().getId(), "Zahlung", etDate.getText().toString());
     			Thread.sleep(500);
     		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		} catch (InterruptedException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		} catch (FunctionNotDefinedException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		} catch (NotFoundException e) {
-				// TODO Auto-generated catch block
-				error = e.getMessage();
+    			errorMessage = e.getMessage();
 			}
     		
     		try {
@@ -310,28 +307,21 @@ public class PayActivity extends Activity {
     			ServerConnector.addEinkaufPart(ePart.getEinkaufId(), ePart.getGastId(), ePart.getBetrag(), ePart.getNotiz());
     			Thread.sleep(500);
     		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		} catch (InterruptedException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		} catch (FunctionNotDefinedException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		} catch (NotFoundException e) {
-				// TODO Auto-generated catch block
-    			error = e.getMessage();
+    			errorMessage = e.getMessage();
 			}
-    		
-    		
-
-    		       		return null;
+    		return null;
     	}
     	@Override
     	protected void onPostExecute(Void result) {  
     		pdia.dismiss();
-    		if (error!=null) {
-				Dialogs.messageDialog(PayActivity.this, "Fehler", error);
+    		if (!errorMessage.matches("")) {
+				Dialogs.messageDialog(PayActivity.this, "Fehler", errorMessage);
 			}else{
 
             finish();

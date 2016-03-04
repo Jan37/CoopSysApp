@@ -4,9 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
+import java.util.Arrays;
 import com.example.coopsysapp.exception.*;
 
 /**
@@ -25,11 +26,12 @@ import com.example.coopsysapp.exception.*;
  */
 public class ServerConnector {
 	
-	public static final boolean offline = true;
+	public static boolean offline = true;
 	
 	
 	public static Socket client_socket;// = new Socket("192.168.42.1", 5000);	
-	private static final String ip = "192.168.42.1";
+	private static final String ip = "192.168.0.55";
+	//private static final String ip = "192.168.42.1";
 	private static final int port = 5000;
 	private static User user;
 
@@ -70,7 +72,8 @@ public class ServerConnector {
 		//function not defined: "Function not defined;" + function
 		if (message.startsWith("FunctionNotDefinedException")) {
 			String[] m = message.split(";");
-			throw new FunctionNotDefinedException(m[1]);
+			//throw new FunctionNotDefinedException(m[1]);
+			throw new FunctionNotDefinedException(function);
 		}
 		return message;
 	}
@@ -82,7 +85,7 @@ public class ServerConnector {
 	 * @throws FunctionNotDefinedException 
 	 */
 	public static User[] getNameList() throws IOException, FunctionNotDefinedException {
-		initialize("192.168.42.1", 5000);
+		initialize(ip, port);
 		String message = "";
 		if (!offline) {
 			message = sendFunction("getNameList()");
@@ -110,7 +113,7 @@ public class ServerConnector {
 	 * @throws UserAlreadyExistsException 
 	 */
 	public static int register(String name) throws IOException, FunctionNotDefinedException, UserAlreadyExistsException{
-		initialize("192.168.42.1", 5000);
+		initialize(ip, port);
 		String message = "";
 		if (!offline) {
 			message = sendFunction("register("+ name +")");
@@ -519,7 +522,14 @@ public class ServerConnector {
 		}
 		
 		String[] einkaufeStrings = message.split(";");
+
 		Einkauf[] einkaufe = new Einkauf[einkaufeStrings.length];
+		
+		//Prevent processing empty String-Array
+		if (einkaufeStrings[0].matches("")) {
+			return einkaufe;
+		}
+		
 		for (int i = 0; i<einkaufe.length; i++) {
 			String[] e = einkaufeStrings[i].split(",");
 			einkaufe[i] = new Einkauf(Integer.parseInt(e[0]), Integer.parseInt(e[1]), e[2], e[3]);

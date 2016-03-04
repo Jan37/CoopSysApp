@@ -7,6 +7,7 @@ import java.text.DecimalFormat;
 import com.example.coopsysapp.exception.FunctionNotDefinedException;
 import com.example.coopsysapp.exception.NotFoundException;
 import com.example.coopsysapp.util.AccountTextView;
+import com.example.coopsysapp.util.Dialogs;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -143,10 +144,9 @@ public class MainMenuActivity extends Activity {
 	private class getTotalDebt extends AsyncTask<Void, Integer, Void> {
 		private ProgressDialog pdia;
 		private float account;
+		private String errorMessage = "";
 		
 		public getTotalDebt() {
-
-			
 		}
 		
 		@Override
@@ -180,35 +180,43 @@ public class MainMenuActivity extends Activity {
 					tvAccount.setText("+ " + String.valueOf(df.format(account*-1)) + " €");
 					tvAccount.setTextColor(Color.parseColor("#2aa916"));
 				}
-				Thread.sleep(1000);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				tvAccount.setText("Fehler 1");
-				tvAccount.setTextColor(Color.BLACK);
-				e.printStackTrace();
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (FunctionNotDefinedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NumberFormatException e) {
-				tvAccount.setText("-NumberFormatE-");
+				tvAccount.setText("Fehler");
 				tvAccount.setTextColor(Color.RED);
-				Log.e("parseFloat", e.getMessage());
+				errorMessage = e.getMessage();
+			} catch (UnknownHostException e) {
+				tvAccount.setText("Fehler");
+				tvAccount.setTextColor(Color.RED);
+				errorMessage = e.getMessage();
+			} catch (IOException e) {
+				tvAccount.setText("Fehler");
+				tvAccount.setTextColor(Color.RED);
+				errorMessage = e.getMessage();
+			} catch (FunctionNotDefinedException e) {
+				tvAccount.setText("Fehler");
+				tvAccount.setTextColor(Color.RED);
+				errorMessage = e.getMessage();
+			} catch (NotFoundException e) {
+				tvAccount.setText("Fehler");
+				tvAccount.setTextColor(Color.RED);
+				errorMessage = e.getMessage();
+			} catch (NumberFormatException e) {
+				tvAccount.setText("Fehler");
+				tvAccount.setTextColor(Color.RED);
+				errorMessage = e.getMessage();
 			}
 			
-			       		return null;
+			return null;
 		}
 		@Override
 		protected void onPostExecute(Void result) {
 			
     		pdia.dismiss();
+    		
+    		if (!errorMessage.matches("")) {
+				Dialogs.messageDialog(MainMenuActivity.this, "Fehler", errorMessage);
+			}
 
 		}
 

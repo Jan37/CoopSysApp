@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.example.coopsysapp.exception.FunctionNotDefinedException;
 import com.example.coopsysapp.util.Data;
+import com.example.coopsysapp.util.Dialogs;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -12,6 +13,7 @@ import android.graphics.PixelFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -20,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
  
 public class SplashScreen extends Activity {
 	public TextView tvStatus;
@@ -37,6 +40,21 @@ public class SplashScreen extends Activity {
         getActionBar().hide();
         tvStatus = (TextView) findViewById(R.id.textViewStatus);
         tvStatus.setVisibility(View.INVISIBLE);
+        
+        ImageView iv = (ImageView) findViewById(R.id.logo);
+        iv.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (ServerConnector.offline) {
+					ServerConnector.offline=false;
+					Toast.makeText(getApplicationContext(), "Online-Modus aktiviert", Toast.LENGTH_SHORT).show();
+				}else{
+					ServerConnector.offline =true;
+					Toast.makeText(getApplicationContext(), "Offline-Modus aktiviert", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
         
         StartAnimations();
         
@@ -59,7 +77,7 @@ public class SplashScreen extends Activity {
     }
     
     private class getNameList extends AsyncTask<Void, Integer, Void> {
-
+    	private String errorMessage = "";
     	public getNameList() {
     	}
     	
@@ -84,29 +102,33 @@ public class SplashScreen extends Activity {
     				
     		try {
                 tvStatus.setVisibility(View.VISIBLE);
+                Thread.sleep(2500);
     			User[] userlist = ServerConnector.getNameList();
     			Data.getInstance().setUserList(userlist);
-    			Thread.sleep(2500);
+    			
     		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		} catch (InterruptedException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		} catch (FunctionNotDefinedException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		}
-    		
-    		       		return null;
+    		return null;
     	}
+    	
     	@Override
     	protected void onPostExecute(Void result) {
-    		Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+    		
+            if (!errorMessage.matches("")) {
+				Dialogs.messageDialog(SplashScreen.this, "Fehler", errorMessage);
+			}
+    		
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
             //overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
 
             finish();
+
     		super.onPostExecute(result);
     	}
 

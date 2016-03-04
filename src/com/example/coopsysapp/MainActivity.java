@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.example.coopsysapp.exception.FunctionNotDefinedException;
 import com.example.coopsysapp.util.Data;
+import com.example.coopsysapp.util.Dialogs;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -106,6 +107,20 @@ public class MainActivity extends Activity {
 			adapterItems[i]=Data.getInstance().getUserList()[i].getName();
 		}		 		
 		spnDropDown.setAdapter(new MyAdapter(this, R.layout.user_spinner,adapterItems));
+		
+        ivLogo.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (ServerConnector.offline) {
+					ServerConnector.offline=false;
+					Toast.makeText(getApplicationContext(), "Online-Modus aktiviert", Toast.LENGTH_SHORT).show();
+				}else{
+					ServerConnector.offline =true;
+					Toast.makeText(getApplicationContext(), "Offline-Modus aktiviert", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
 	}
 	
 	@Override
@@ -167,7 +182,8 @@ public class MainActivity extends Activity {
 	
 	private class getNameList extends AsyncTask<Void, Integer, Void> {
 		private ProgressDialog pdia;
-
+		private String errorMessage = "";
+		
     	public getNameList() {
     	}
     	
@@ -191,23 +207,21 @@ public class MainActivity extends Activity {
     			Data.getInstance().setUserList(userlist);
     			Thread.sleep(500);
     		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		} catch (InterruptedException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		} catch (FunctionNotDefinedException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		}
-    		
-    		
-
-    		       		return null;
+    		return null;
     	}
     	@Override
     	protected void onPostExecute(Void result) {
     		super.onPostExecute(result);
+    		if (!errorMessage.matches("")) {
+				Dialogs.messageDialog(MainActivity.this, "Fehler", "Benutzerliste konnte nicht geladen werden.\n"
+						+ errorMessage);
+			}
     		adapterItems = new String[Data.getInstance().getUserList().length];
     		for (int i = 0; i < adapterItems.length; i++) {
     			adapterItems[i]=Data.getInstance().getUserList()[i].getName();

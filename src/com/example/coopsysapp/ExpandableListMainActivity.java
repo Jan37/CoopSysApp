@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.example.coopsysapp.exception.FunctionNotDefinedException;
 import com.example.coopsysapp.exception.NotFoundException;
 import com.example.coopsysapp.util.Data;
+import com.example.coopsysapp.util.Dialogs;
 import com.example.coopsysapp.util.MyExpandableAdapter;
 
 import android.app.ExpandableListActivity;
@@ -52,6 +53,7 @@ public class ExpandableListMainActivity extends ExpandableListActivity
     
     private class getEinkaufList extends AsyncTask<Void, Integer, Void> {
 		private ProgressDialog pdia;
+		private String errorMessage = "";
 
 		public getEinkaufList() {
 
@@ -76,6 +78,8 @@ public class ExpandableListMainActivity extends ExpandableListActivity
 				
 				Einkauf[] einkaufeOfMe = ServerConnector.getEinkaufe(ServerConnector.getUser().getId());
 				
+				if(einkaufeOfMe[0]!=null){
+				
 				for (int i = 0; i < einkaufeOfMe.length; i++) {
 					Einkauf einkauf = einkaufeOfMe[i];
 					EinkaufPart[] einkaufPart = ServerConnector.getPartsForEinkauf(einkauf.getId());
@@ -91,24 +95,23 @@ public class ExpandableListMainActivity extends ExpandableListActivity
 											+ "Einkäufer: Du" );
 					childItems.add(child);	
 				}
+				}
 
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorMessage=e.getMessage();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorMessage=e.getMessage();
 			} catch (FunctionNotDefinedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorMessage=e.getMessage();
 			} catch (NotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorMessage=e.getMessage();
 			}
 			
 			try {
 				
 				EinkaufPart[] einkaufPartsWithMe = ServerConnector.getPartsForUser((ServerConnector.getUser().getId()));				
+				
+				if(einkaufPartsWithMe!=null){
 				
 				for (int i = 0; i < einkaufPartsWithMe.length; i++) {
 					Einkauf einkauf = ServerConnector.getEinkauf(einkaufPartsWithMe[i].getEinkaufId());
@@ -125,25 +128,27 @@ public class ExpandableListMainActivity extends ExpandableListActivity
 											+ "Einkäufer: " + Data.getInstance().getUserList()[einkauf.getEinkauefer()-1].getName() );
 					childItems.add(child);	
 				}
+				}
 				
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorMessage=e.getMessage();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorMessage=e.getMessage();
 			} catch (FunctionNotDefinedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorMessage=e.getMessage();
 			} catch (NotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorMessage=e.getMessage();
 			}
 			
 			return null;
 		}
 		@Override
 		protected void onPostExecute(Void result) {
+			if (!errorMessage.matches("")) {
+				Dialogs.messageDialog(ExpandableListMainActivity.this, "Fehler", "Deine Einkäufe konnten nicht geladen werden.\n"
+						+ errorMessage);
+				//TODO finish();
+			}
 			pdia.dismiss();
 			MyExpandableAdapter adapter = new MyExpandableAdapter(parentItems,
 					childItems);

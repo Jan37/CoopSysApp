@@ -528,6 +528,7 @@ public class AddEinkaufActivity extends Activity {
     
     private class getNameList extends AsyncTask<Void, Integer, Void> {
 		private ProgressDialog pdia;
+		private String errorMessage = "";
 
     	public getNameList() {
     	}
@@ -552,23 +553,23 @@ public class AddEinkaufActivity extends Activity {
     			Data.getInstance().setUserList(userlist);
     			Thread.sleep(500);
     		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		} catch (InterruptedException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();
     		} catch (FunctionNotDefinedException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			errorMessage = e.getMessage();;
     		}
-    		
-    		
-
-    		       		return null;
+    		return null;
     	}
+    	
     	@Override
     	protected void onPostExecute(Void result) {
     		super.onPostExecute(result);
+    		
+    		if (!errorMessage.matches("")) {
+				Dialogs.messageDialog(AddEinkaufActivity.this, "Fehler", errorMessage);
+			}
+    		
     		adapterItems = new String[Data.getInstance().getUserList().length+1];
     		for (int i = 0; i < adapterItems.length; i++) {
     			if (i==0) {
@@ -591,6 +592,7 @@ public class AddEinkaufActivity extends Activity {
 	
 	private class addEinkauf extends AsyncTask<Void, Integer, Void> {
 		private ProgressDialog progress;
+		private String errorMessage = "";
 
 		public addEinkauf(AddEinkaufActivity activity) {
 			if(progress != null){
@@ -602,7 +604,7 @@ public class AddEinkaufActivity extends Activity {
 		@Override
 		protected void onPreExecute() {
 			progress.setMessage("Erstelle Einkauf, bitte warten ...");
-	        //progress.show();
+	        progress.show();
 		}
 
 	    @Override
@@ -614,7 +616,6 @@ public class AddEinkaufActivity extends Activity {
 		protected Void doInBackground(Void... params) {
 					
 			try {
-				//TODO Date
 				Log.d("EinkaufPreAdded", ServerConnector.einkaufString);
 
 				int einkaufId = ServerConnector.addEinkauf(ServerConnector.getUser().getId(), 
@@ -691,24 +692,24 @@ public class AddEinkaufActivity extends Activity {
 				
 				Thread.sleep(500);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorMessage = e.getMessage();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorMessage = e.getMessage();
 			} catch (FunctionNotDefinedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorMessage = e.getMessage();
 			} catch (NotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorMessage = e.getMessage();
 			}
-			
-			       		return null;
+			return null;
 		}
+		
 		@Override
 		protected void onPostExecute(Void result) {
 
+			if (!errorMessage.matches("")) {
+				Dialogs.messageDialog(AddEinkaufActivity.this, "Fehler", errorMessage);
+			}
+			
 			if (progress.isShowing()) {
 	        	progress.dismiss();
 	        }

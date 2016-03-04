@@ -38,7 +38,6 @@ public class SplashScreen extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        getActionBar().hide();
         tvStatus = (TextView) findViewById(R.id.textViewStatus);
         tvStatus.setVisibility(View.INVISIBLE);
         

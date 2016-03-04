@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">CoopSysApp</string>
+    <string name="app_name">RadS</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">Login</string>
@@ -10,5 +10,7 @@
     <string name="title_activity_detail">DetailActivity</string>
     <string name="title_activity_add_einkauf">AddEinkaufActivity</string>
     <string name="title_activity_pay">PayActivity</string>
+    <string name="title_activity_splash_screen">SplashScreen</string>
+    <string name="title_activity_expandable_list_main">ExpandableListMainActivity</string>
 
 </resources>

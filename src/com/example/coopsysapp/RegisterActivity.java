@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.example.coopsysapp.exception.FunctionNotDefinedException;
 import com.example.coopsysapp.exception.UserAlreadyExistsException;
+import com.example.coopsysapp.util.Dialogs;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -27,7 +28,7 @@ public class RegisterActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
-		
+		getActionBar().hide();
 		btnRegister = (Button) findViewById(R.id.button1);
 		etRegister = (EditText) findViewById(R.id.editText1);
 		
@@ -35,8 +36,13 @@ public class RegisterActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				  register task = new register(RegisterActivity.this, etRegister.getText().toString());
-		          task.execute();				
+				
+				if (etRegister.getText().toString().matches("")) {
+					etRegister.setError("Plichtfeld");
+					return;
+				}
+				new register().execute(null, null , null);
+			
 			}
 		});
 	}
@@ -59,21 +65,31 @@ public class RegisterActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	@Override
+	public void onBackPressed() {
+	 super.onBackPressed();
+	 overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+	}
 
 	private class register extends AsyncTask<Void, Integer, Void> {
-		private ProgressDialog progress ;
-		String name;
+		private ProgressDialog pdia;
 		int index=9999;
+		private String error = null;
 
-		public register(RegisterActivity activity, String name) {
-			progress= new ProgressDialog(activity);
-			this.name=name;
+		public register() {
+			
 		}
 		
 		@Override
 		protected void onPreExecute() {
-			progress.setMessage("Registriere Benutzer " + name + ", bitte warten ...");
-	        progress.show();
+			if (pdia != null) {
+				//pdia.dismiss();
+				pdia=null;
+			}
+			pdia = new ProgressDialog(RegisterActivity.this);
+            pdia.setMessage("Registriere Benutzer ... ");
+            pdia.show();
 		}
 
 	    @Override
@@ -83,38 +99,46 @@ public class RegisterActivity extends Activity {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-					
+			User newUser = null;
 			try {
-				index = ServerConnector.register(name);
-				
+				index = ServerConnector.register(etRegister.getText().toString());
+				newUser = new User(index, etRegister.getText().toString());
 				Thread.sleep(500);
 			} catch (InterruptedException | IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				error = e.getMessage();
+				return null;
 			} catch (FunctionNotDefinedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				error = e.getMessage();
+				return null;
+
 			} catch (UserAlreadyExistsException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				error = e.getMessage();
+				return null;
+
 			}
 			
-			       		return null;
+			ServerConnector.setUser(newUser);
+			
+			return null;
 		}
 		@Override
 		protected void onPostExecute(Void result) {
-			
-	        
-			if (progress.isShowing()) {
-	        	progress.dismiss();
+		
+			if (pdia.isShowing()) {
+	        	pdia.dismiss();
 	        }
 			
-			Toast.makeText(getApplicationContext(), "index:" + index, Toast.LENGTH_SHORT).show();
-			
+			if (error!=null) {
+				Dialogs.messageDialog(RegisterActivity.this, "Fehler", error);
+			}else{
 			Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-            startActivity(intent);      
-            //finish();
-			super.onPostExecute(result);
+            startActivity(intent); 
+            overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+            finish();
+			}
 		}
 
 	}

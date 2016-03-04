@@ -31,7 +31,8 @@ public class Login extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-
+		overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+		
 		spnDropDown = (Spinner) findViewById(R.id.spinner1);
 
 		btnLogin = (Button) findViewById(R.id.buttonLogin);

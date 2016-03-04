@@ -2,11 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient"
+    android:background="@drawable/radialback"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.coopsysapp.PayActivity" >
 
     <TextView
@@ -14,8 +11,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
         android:text="Zahlung an Nutzer"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#FFFFFF" />
 
     <Spinner
         android:id="@+id/spinner1"
@@ -25,44 +24,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="34dp" />
 
-    <GridLayout
-        android:id="@+id/gridLayout1"
-        android:layout_width="300sp"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/spinner1"
-        android:layout_marginTop="38dp"
-        android:columnCount="2"
-        android:rowCount="2" >
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="100sp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:text="Betrag:"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <EditText
-            android:id="@+id/editText1"
-            android:layout_width="100sp"
-            android:inputType="numberDecimal" >
-
-            <requestFocus />
-        </EditText>
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="100sp"
-            android:layout_gravity="left"
-            android:text="Notiz"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <EditText
-            android:id="@+id/editText2"
-            android:layout_width="100sp"/>
-    </GridLayout>
-
     <Button
         android:id="@+id/button1"
         android:layout_width="300sp"
@@ -70,6 +31,76 @@
         android:layout_below="@+id/gridLayout1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="63dp"
-        android:text="Zahlung bestätigen" />
+        android:text="Zahlung bestätigen"
+        android:textColor="#FFFFFF" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:layout_alignLeft="@+id/button1"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/user" />
+    
+        <TextView
+        android:id="@+id/textViewUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView1"
+        android:layout_marginLeft="14dp"
+        android:layout_toRightOf="@+id/imageView1"
+        android:text="Testuser"
+        android:textColor="#FFFFFF" />
+
+        <GridLayout
+            android:id="@+id/gridLayout1"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:columnCount="2"
+            android:rowCount="3" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="100sp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="Betrag:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#FFFFFF" />
+
+            <EditText
+                android:id="@+id/editText1"
+                android:layout_width="100sp"
+                android:inputType="numberDecimal"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="100sp"
+                android:layout_gravity="left"
+                android:text="Notiz"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#FFFFFF" />
+
+            <EditText
+                android:id="@+id/editText2"
+                android:layout_width="100sp"
+                android:textColor="#FFFFFF" />
+            
+            <TextView
+            android:id="@+id/textViewDate"
+            android:layout_gravity="left"
+            android:text="Datum:"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#FFFFFF" />
+
+        <EditText
+            android:id="@+id/etDate"
+            android:layout_gravity="fill_horizontal"
+            android:focusable="false"
+            android:textColor="#FFFFFF" />
+        </GridLayout>
 
 </RelativeLayout>

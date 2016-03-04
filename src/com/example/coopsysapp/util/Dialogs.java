@@ -11,7 +11,6 @@ public class Dialogs {
 	    dialog.setMessage(message);
 	    dialog.setNeutralButton("OK", null);
 	    dialog.create().show();     
-
 	}
 
 }

@@ -2,10 +2,11 @@ package com.example.coopsysapp;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.text.DecimalFormat;
 
 import com.example.coopsysapp.exception.FunctionNotDefinedException;
 import com.example.coopsysapp.exception.NotFoundException;
-import com.example.coopsysapp.util.Dialogs;
+import com.example.coopsysapp.util.AccountTextView;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -13,6 +14,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,29 +22,37 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainMenuActivity extends Activity {
 
 	
 	public Button btnDetail, btnAddEinkauf, btnPay;
-	public TextView tvAccount, tvUsername;
+	public TextView tvUsername;
+	public AccountTextView tvAccount, tvAccountTopic;
+	private boolean doubleBackToExitPressedOnce=false;
+	public DecimalFormat df = new DecimalFormat("0.00");
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_menu);
+		getActionBar().hide();
 		
-		initialize();
-		
-		getTotalDebt task = new getTotalDebt(MainMenuActivity.this);
-		task.execute();
-		
+		initialize();		
 	}
 	
 	@Override
 	protected void onStart() {
 
 		super.onStart();
+	}
+	
+	@Override
+	protected void onResume() {
+		new getTotalDebt().execute(null, null , null);
+		super.onResume();
 	}
 
 	@Override
@@ -65,7 +75,9 @@ public class MainMenuActivity extends Activity {
 	}
 	
 	private void initialize() {	
-		tvAccount = (TextView) findViewById(R.id.textView1);
+		tvAccount = (AccountTextView) findViewById(R.id.textView1);
+		tvAccountTopic = (AccountTextView) findViewById(R.id.textView3);
+
 		tvUsername = (TextView) findViewById(R.id.textViewUsername);
 		
 		btnDetail = (Button) findViewById(R.id.button1);
@@ -76,18 +88,19 @@ public class MainMenuActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
-	            startActivity(intent);      				
+				Intent intent = new Intent(getApplicationContext(), ExpandableListMainActivity.class);
+	            startActivity(intent);      
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
 			}
 		});
-		
 		
 		btnAddEinkauf.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(), AddEinkaufActivity.class);
-	            startActivity(intent);   				
+	            startActivity(intent);  
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
 			}
 		});
 		
@@ -97,7 +110,7 @@ public class MainMenuActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(), PayActivity.class);
 	            startActivity(intent); 
-				
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
 			}
 		});
 		
@@ -105,24 +118,46 @@ public class MainMenuActivity extends Activity {
 		
 	}
 	
+	@Override
+	public void onBackPressed() {
+
+	    if (doubleBackToExitPressedOnce) {
+	        super.onBackPressed();
+	   	 overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+
+	        return;
+	    }
+
+	    this.doubleBackToExitPressedOnce = true;
+	    Toast.makeText(this, "Klicke erneut, um dich auszuloggen", Toast.LENGTH_SHORT).show();
+
+	    new Handler().postDelayed(new Runnable() {
+
+	        @Override
+	        public void run() {
+	            doubleBackToExitPressedOnce=false;                       
+	        }
+	    }, 2000);
+	}
+	
 	private class getTotalDebt extends AsyncTask<Void, Integer, Void> {
-		private ProgressDialog progress ;
+		private ProgressDialog pdia;
 		private float account;
-		private MainMenuActivity activity;
 		
-		public getTotalDebt(MainMenuActivity activity) {
-			if(progress !=null)
-			{
-			    progress = null;
-			}
-			progress= new ProgressDialog(activity);
-			this.activity=activity;
+		public getTotalDebt() {
+
+			
 		}
 		
 		@Override
 		protected void onPreExecute() {
-			progress.setMessage("Lade Benutzer, bitte warten ...");
-			progress.show();
+			if (pdia != null) {
+				pdia.dismiss();
+				pdia=null;
+			}
+			pdia = new ProgressDialog(MainMenuActivity.this);
+            pdia.setMessage("Lade Kontostand ...");
+            pdia.show(); 
 		}
 
 	    @Override
@@ -139,13 +174,13 @@ public class MainMenuActivity extends Activity {
 					tvAccount.setText("+- 0 €");
 					tvAccount.setTextColor(Color.BLACK);
 				}else if (account>0) {
-					tvAccount.setText("- " + String.valueOf(account) + " €");
+					tvAccount.setText("- " + String.valueOf(df.format(account)) + " €");
 					tvAccount.setTextColor(Color.RED);
 				}else if (account<0) {
-					tvAccount.setText("+ " + String.valueOf((account*-1)) + " €");
-					tvAccount.setTextColor(Color.GREEN);
+					tvAccount.setText("+ " + String.valueOf(df.format(account*-1)) + " €");
+					tvAccount.setTextColor(Color.parseColor("#2aa916"));
 				}
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				tvAccount.setText("Fehler 1");
 				tvAccount.setTextColor(Color.BLACK);
@@ -173,11 +208,8 @@ public class MainMenuActivity extends Activity {
 		@Override
 		protected void onPostExecute(Void result) {
 			
-			if (progress.isShowing()) {
-	        	progress.dismiss();
-	        }
-			//progress=null;
-			super.onPostExecute(result);
+    		pdia.dismiss();
+
 		}
 
 	}

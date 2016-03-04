@@ -119,7 +119,7 @@ public class ServerConnector {
 			
 			for (User user : userList) {
 				if (user.getName().equalsIgnoreCase(name)) {
-					message = "UserAlreadyExistsExeption;" + name;
+					message = "UserAlreadyExistsException;" + name;
 				}
 			}
 			

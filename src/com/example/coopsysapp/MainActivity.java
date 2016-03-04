@@ -78,11 +78,12 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				if (spnDropDown.getSelectedItem()==null) {
+					return;
+				}
 				ServerConnector.setUser(new User((spnDropDown.getSelectedItemPosition()+1), 
 						spnDropDown.getSelectedItem().toString()));
-				Log.d("MainActivity", String.valueOf(spnDropDown.getSelectedItemPosition()+1));
-				Log.d("MainActivity", String.valueOf(spnDropDown.getSelectedItem().toString()));
-				Log.d("MainActivity", ServerConnector.getUser().getName());
+
 				Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
 	            startActivity(intent);  
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);

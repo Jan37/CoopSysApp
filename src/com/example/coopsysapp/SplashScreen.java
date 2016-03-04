@@ -1,6 +1,7 @@
 package com.example.coopsysapp;
 
 import java.io.IOException;
+import java.net.ConnectException;
 
 import com.example.coopsysapp.exception.FunctionNotDefinedException;
 import com.example.coopsysapp.util.Data;
@@ -86,8 +87,7 @@ public class SplashScreen extends Activity {
 			try {
 				Thread.sleep(1500);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorMessage = e.getMessage();
 			}
     		tvStatus.setText("Lade Benutzer ...");
     	}
@@ -106,6 +106,8 @@ public class SplashScreen extends Activity {
     			User[] userlist = ServerConnector.getNameList();
     			Data.getInstance().setUserList(userlist);
     			
+    		} catch (ConnectException e) {
+    			errorMessage = e.getMessage();
     		} catch (IOException e) {
     			errorMessage = e.getMessage();
     		} catch (InterruptedException e) {

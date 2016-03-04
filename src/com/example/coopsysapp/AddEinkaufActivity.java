@@ -360,7 +360,7 @@ public class AddEinkaufActivity extends Activity {
 			return false;
 		}
     	
-    	if (Float.valueOf(df.format(offenerBetrag))!=0) {
+    	if (Float.valueOf(df.format(offenerBetrag).replace(',', '.'))!=0) {
 			Dialogs.messageDialog(AddEinkaufActivity.this, "Fehler", "Der Betrag des Einkaufs ist nicht korrekt aufgeteilt.");
 			return false;
 		}

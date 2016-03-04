@@ -138,6 +138,8 @@ public class MainActivity extends Activity {
 	public void onBackPressed() {
 	    if (doubleBackToExitPressedOnce) {
 	        super.onBackPressed();
+	        finish();
+	        System.exit(0);
 	        return;
 	    }
 

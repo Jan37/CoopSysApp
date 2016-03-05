@@ -63,7 +63,7 @@ public class ExpandableListMainActivity extends ExpandableListActivity
 		protected void onPreExecute() {
             pdia = new ProgressDialog(ExpandableListMainActivity.this);
             pdia.setMessage("Lade Einkäufe ...");
-            //pdia.show();  
+            pdia.show();  
 		}
 
 	    @Override
@@ -145,8 +145,9 @@ public class ExpandableListMainActivity extends ExpandableListActivity
 		@Override
 		protected void onPostExecute(Void result) {
 			if (!errorMessage.matches("")) {
-				Dialogs.messageDialog(ExpandableListMainActivity.this, "Fehler", "Deine Einkäufe konnten nicht geladen werden.\n"
-						+ errorMessage);
+				Dialogs.showError(ExpandableListMainActivity.this, getApplicationContext(), null, 
+						"Fehler beim Laden der Einkäufe" 
+						, errorMessage, null);
 				//TODO finish();
 			}
 			pdia.dismiss();

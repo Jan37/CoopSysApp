@@ -120,16 +120,17 @@ public class SplashScreen extends Activity {
     	@Override
     	protected void onPostExecute(Void result) {
     		
-            if (!errorMessage.matches("")) {
-				Dialogs.messageDialog(SplashScreen.this, "Fehler", errorMessage);
-			}
-    		
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+    		if (!errorMessage.matches("")) {
+                intent.putExtra("ErrorTitle", "Fehler beim Laden der Benutzerliste");
+                intent.putExtra("ErrorMessage", errorMessage);
+			}
+
             startActivity(intent);
             //overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
 
             finish();
-
     		super.onPostExecute(result);
     	}
 

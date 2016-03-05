@@ -20,6 +20,7 @@ public final class R {
     public static final class attr {
     }
     public static final class dimen {
+        public static final int ac_padding=0x7f050003;
         /**  Default screen margins, per the Android Design guidelines. 
 
          Example customization of dimensions originally defined in res/values/dimens.xml
@@ -29,22 +30,35 @@ public final class R {
          */
         public static final int activity_horizontal_margin=0x7f050000;
         public static final int activity_vertical_margin=0x7f050001;
+        public static final int min_lay_height=0x7f05000b;
+        public static final int min_lay_width=0x7f05000a;
+        public static final int rect_radius=0x7f050002;
+        public static final int spacing_big=0x7f050005;
+        public static final int spacing_small=0x7f050004;
+        public static final int text_size_large=0x7f050009;
+        public static final int text_size_medium=0x7f050008;
+        public static final int text_size_micro=0x7f050006;
+        public static final int text_size_small=0x7f050007;
     }
     public static final class drawable {
-        public static final int gradient=0x7f020000;
-        public static final int gradientrads=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
-        public static final int pig=0x7f020003;
-        public static final int radialback=0x7f020004;
-        public static final int rads=0x7f020005;
-        public static final int radslogo=0x7f020006;
-        public static final int radssplash=0x7f020007;
-        public static final int user=0x7f020008;
-        public static final int zwegat=0x7f020009;
+        public static final int draw_black_rect=0x7f020000;
+        public static final int draw_toast_bg=0x7f020001;
+        public static final int gradient=0x7f020002;
+        public static final int gradientrads=0x7f020003;
+        public static final int ic_launcher=0x7f020004;
+        public static final int pig=0x7f020005;
+        public static final int radialback=0x7f020006;
+        public static final int rads=0x7f020007;
+        public static final int radslogo=0x7f020008;
+        public static final int radssplash=0x7f020009;
+        public static final int sel_btn_retry=0x7f02000a;
+        public static final int user=0x7f02000b;
+        public static final int zwegat=0x7f02000c;
     }
     public static final class id {
         public static final int LinearLayout1=0x7f090026;
-        public static final int action_settings=0x7f09003d;
+        public static final int action_settings=0x7f090041;
+        public static final int btnAction=0x7f09003e;
         public static final int btnEinkaufOk=0x7f09000b;
         public static final int btnVerteilen=0x7f090021;
         public static final int button1=0x7f09002b;
@@ -83,6 +97,7 @@ public final class R {
         public static final int logo=0x7f090032;
         public static final int scrollView1=0x7f09000a;
         public static final int secondLine=0x7f090037;
+        public static final int separator=0x7f090040;
         public static final int spinner1=0x7f090029;
         public static final int spnGuest1=0x7f09000f;
         public static final int spnGuest2=0x7f090012;
@@ -105,6 +120,8 @@ public final class R {
         public static final int textViewStatus=0x7f090033;
         public static final int textViewUsername=0x7f090022;
         public static final int text_main_seen=0x7f09003a;
+        public static final int txtMessage=0x7f09003d;
+        public static final int txtSubMessage=0x7f09003f;
     }
     public static final class layout {
         public static final int activity_add_einkauf=0x7f030000;
@@ -124,6 +141,7 @@ public final class R {
         public static final int simple_spinner=0x7f03000e;
         public static final int spinner_white=0x7f03000f;
         public static final int user_spinner=0x7f030010;
+        public static final int view_toast=0x7f030011;
     }
     public static final class menu {
         public static final int add_einkauf=0x7f080000;

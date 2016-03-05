@@ -132,7 +132,9 @@ public class RegisterActivity extends Activity {
 	        }
 			
 			if (error!=null) {
-				Dialogs.messageDialog(RegisterActivity.this, "Fehler", error);
+				Dialogs.showError(RegisterActivity.this, getApplicationContext(), null, 
+						"Fehler bei der Registrierung" 
+						, error, null);
 			}else{
 			Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
             startActivity(intent); 

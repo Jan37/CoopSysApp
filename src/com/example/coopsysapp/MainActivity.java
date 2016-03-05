@@ -124,10 +124,28 @@ public class MainActivity extends Activity {
 		});
 	}
 	
+	private class retryOnClickListener implements OnClickListener{
+
+		@Override
+		public void onClick(View v) {
+			
+		}
+		// TODO Auto-generated method stub
+
+	}
+	
 	@Override
 	protected void onResume() {
 		if (!Data.getInstance().isFirstStart()) {
 			new getNameList().execute(null, null , null);
+		}else {
+			
+			if (getIntent().hasExtra("ErrorTitle")) {
+				Bundle bundle = getIntent().getExtras();
+				Dialogs.showError(MainActivity.this, getApplicationContext(), null, 
+						bundle.getString("ErrorTitle") 
+						, bundle.getString("ErrorMessage"), null);
+			}
 		}
 		
 		Data.getInstance().setFirstStart(false);
@@ -222,8 +240,9 @@ public class MainActivity extends Activity {
     	protected void onPostExecute(Void result) {
     		super.onPostExecute(result);
     		if (!errorMessage.matches("")) {
-				Dialogs.messageDialog(MainActivity.this, "Fehler", "Benutzerliste konnte nicht geladen werden.\n"
-						+ errorMessage);
+				Dialogs.showError(MainActivity.this, getApplicationContext(), null, 
+						"Fehler beim Laden der Benutzerliste" 
+						, errorMessage, null);
 			}
     		adapterItems = new String[Data.getInstance().getUserList().length];
     		for (int i = 0; i < adapterItems.length; i++) {

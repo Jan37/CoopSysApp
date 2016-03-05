@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -116,6 +117,21 @@ public class MainMenuActivity extends Activity {
 		});
 		
 		tvUsername.setText(ServerConnector.getUser().getName());
+		ImageView ivLogo = (ImageView) findViewById(R.id.imageView2);
+		ivLogo.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (ServerConnector.offline) {
+					ServerConnector.offline=false;
+					Toast.makeText(getApplicationContext(), "Online-Modus aktiviert", Toast.LENGTH_SHORT).show();
+				}else{
+					ServerConnector.offline =true;
+					Toast.makeText(getApplicationContext(), "Offline-Modus aktiviert", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+
 		
 	}
 	
@@ -215,7 +231,9 @@ public class MainMenuActivity extends Activity {
     		pdia.dismiss();
     		
     		if (!errorMessage.matches("")) {
-				Dialogs.messageDialog(MainMenuActivity.this, "Fehler", errorMessage);
+    			Dialogs.showError(MainMenuActivity.this, getApplicationContext(), null, 
+						"Fehler beim Laden des Kontostands" 
+						, errorMessage, null);
 			}
 
 		}

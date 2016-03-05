@@ -248,7 +248,9 @@ public class PayActivity extends Activity {
     		super.onPostExecute(result);
     		
     		if (!errorMessage.matches("")) {
-				Dialogs.messageDialog(PayActivity.this, "Fehler", errorMessage);
+    			Dialogs.showError(PayActivity.this, getApplicationContext(), null, 
+						"Fehler beim Laden der Benutzerliste" 
+						, errorMessage, null);
 			}
     		
     		adapterItems = new String[Data.getInstance().getUserList().length+1];
@@ -321,7 +323,9 @@ public class PayActivity extends Activity {
     	protected void onPostExecute(Void result) {  
     		pdia.dismiss();
     		if (!errorMessage.matches("")) {
-				Dialogs.messageDialog(PayActivity.this, "Fehler", errorMessage);
+    			Dialogs.showError(PayActivity.this, getApplicationContext(), null, 
+						"Fehler beim Buchen der Zahlung" 
+						, errorMessage, null);
 			}else{
 
             finish();

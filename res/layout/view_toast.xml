@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:background="@drawable/draw_toast_bg"
+    android:minHeight="@dimen/min_lay_height"
+    android:minWidth="@dimen/min_lay_width"
+    android:paddingBottom="10dp"
+    android:paddingTop="15dp" >
+
+    <TextView
+        android:id="@+id/txtMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/btnAction"
+        android:layout_toStartOf="@id/btnAction"
+        android:drawableLeft="@android:drawable/ic_dialog_alert"
+        android:drawablePadding="@dimen/spacing_big"
+        android:drawableStart="@android:drawable/ic_dialog_alert"
+        android:gravity="center_vertical"
+        android:paddingLeft="12dp"
+        android:paddingRight="@dimen/spacing_small"
+        android:text="Fehler"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size_medium"
+        android:textStyle="bold" />
+    
+    <Button android:id="@+id/btnAction" 
+        android:layout_width="50dp" 
+        android:layout_height="wrap_content" 
+        android:layout_alignBottom="@+id/txtSubMessage" 
+        android:layout_alignParentEnd="true" 
+        android:layout_alignParentRight="true" 
+        android:layout_alignParentTop="true" 
+        android:background="@drawable/sel_btn_retry" 
+        android:text="Retry" 
+        android:textColor="@android:color/black" 
+        android:textSize="@dimen/text_size_medium" />
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="0.5dp"
+        android:layout_height="35dp"
+        android:layout_alignBottom="@+id/txtSubMessage"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/txtMessage"        
+        android:background="@android:color/darker_gray"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size_medium" /><TextView
+        android:id="@+id/txtSubMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@id/separator"
+        android:layout_marginTop="50dp"
+        android:paddingLeft="50dp"
+        android:paddingRight="@dimen/spacing_small"
+        android:scrollbars="vertical"
+        android:text="weitere informationen"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size_small" />
+
+</RelativeLayout>

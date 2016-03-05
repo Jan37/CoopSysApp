@@ -567,7 +567,9 @@ public class AddEinkaufActivity extends Activity {
     		super.onPostExecute(result);
     		
     		if (!errorMessage.matches("")) {
-				Dialogs.messageDialog(AddEinkaufActivity.this, "Fehler", errorMessage);
+    			Dialogs.showError(AddEinkaufActivity.this, getApplicationContext(), null, 
+						"Fehler beim Laden der Benutzerliste" 
+						, errorMessage, null);
 			}
     		
     		adapterItems = new String[Data.getInstance().getUserList().length+1];
@@ -707,7 +709,9 @@ public class AddEinkaufActivity extends Activity {
 		protected void onPostExecute(Void result) {
 
 			if (!errorMessage.matches("")) {
-				Dialogs.messageDialog(AddEinkaufActivity.this, "Fehler", errorMessage);
+				Dialogs.showError(AddEinkaufActivity.this, getApplicationContext(), null, 
+						"Fehler beim Erstellen des Einkaufs" 
+						, errorMessage, null);
 			}
 			
 			if (progress.isShowing()) {

@@ -121,12 +121,16 @@ public class HighscoreActivity extends Activity {
 					try {
 						debt = ServerConnector.getTotalDebt(user.getId());
 					} catch (UnknownHostException e) {
+						errorMessage = e.getMessage();
 						continue;
 					} catch (IOException e) {
+						errorMessage = e.getMessage();
 						continue;
 					} catch (FunctionNotDefinedException e) {
+						errorMessage = e.getMessage();
 						continue;
 					} catch (NotFoundException e) {
+						errorMessage = e.getMessage();
 						continue;
 					}
 					listValuesAll.add(user.getName() + ": " + df.format(debt*-1) + " €");
@@ -157,12 +161,16 @@ public class HighscoreActivity extends Activity {
 					try {
 						debt = ServerConnector.getDebt( ServerConnector.getUser().getId(),user.getId());
 					} catch (UnknownHostException e) {
+						errorMessage = e.getMessage();
 						continue;
 					} catch (IOException e) {
+						errorMessage = e.getMessage();
 						continue;
 					} catch (FunctionNotDefinedException e) {
+						errorMessage = e.getMessage();
 						continue;
 					} catch (NotFoundException e) {
+						errorMessage = e.getMessage();
 						continue;
 					}
 					listValuesPersonal.add(user.getName() + ": " + df.format(debt.getBetrag()) + " €");

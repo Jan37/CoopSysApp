@@ -29,7 +29,7 @@ import android.widget.Toast;
 public class MainMenuActivity extends Activity {
 
 	
-	public Button btnDetail, btnAddEinkauf, btnPay;
+	public Button btnDetail, btnAddEinkauf, btnPay, btnHighscore, btnPersonalDebt;
 	public TextView tvUsername;
 	public AccountTextView tvAccount, tvAccountTopic;
 	private boolean doubleBackToExitPressedOnce=false;
@@ -85,6 +85,7 @@ public class MainMenuActivity extends Activity {
 		btnDetail = (Button) findViewById(R.id.button1);
 		btnAddEinkauf = (Button) findViewById(R.id.button2);
 		btnPay = (Button) findViewById(R.id.button3);
+		btnHighscore = (Button) findViewById(R.id.buttonHighscore);
 		
 		btnDetail.setOnClickListener(new OnClickListener() {
 			
@@ -111,6 +112,16 @@ public class MainMenuActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(), PayActivity.class);
+	            startActivity(intent); 
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+			}
+		});
+		
+		btnHighscore.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(), HighscoreActivity.class);
 	            startActivity(intent); 
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
 			}

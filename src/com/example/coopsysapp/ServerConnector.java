@@ -31,9 +31,8 @@ public class ServerConnector {
 	public static String networkPass = "clausthal";
 	
 	
-	public static Socket client_socket;// = new Socket("192.168.42.1", 5000);	
+	public static Socket client_socket;	
 	public static String ip = "192.168.0.55";
-	//private static final String ip = "192.168.42.1";
 	private static final int port = 5000;
 	private static User user;
 
@@ -425,7 +424,10 @@ public class ServerConnector {
 		if (message.startsWith("NotFoundException")) {
 			throw new NotFoundException(message.split(";")[1], false);
 		}
-		
+		//TODO Newly added: Check why message can be empty
+		if (message=="") {
+			message = "0";
+		}
 		Debt debt = new Debt(schuldnerId, glaubigerId, Float.parseFloat(message));
 		return debt;
 	}

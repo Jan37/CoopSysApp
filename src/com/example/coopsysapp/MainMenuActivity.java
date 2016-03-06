@@ -117,16 +117,18 @@ public class MainMenuActivity extends Activity {
 		});
 		
 		tvUsername.setText(ServerConnector.getUser().getName());
-		ImageView ivLogo = (ImageView) findViewById(R.id.imageView2);
+		ImageView ivLogo = (ImageView) findViewById(R.id.imageView1);
 		ivLogo.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				if (ServerConnector.offline) {
 					ServerConnector.offline=false;
+					new getTotalDebt().execute(null, null , null);
 					Toast.makeText(getApplicationContext(), "Online-Modus aktiviert", Toast.LENGTH_SHORT).show();
 				}else{
 					ServerConnector.offline =true;
+					new getTotalDebt().execute(null, null , null);
 					Toast.makeText(getApplicationContext(), "Offline-Modus aktiviert", Toast.LENGTH_SHORT).show();
 				}
 			}

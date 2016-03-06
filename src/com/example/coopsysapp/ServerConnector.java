@@ -27,10 +27,12 @@ import com.example.coopsysapp.exception.*;
 public class ServerConnector {
 	
 	public static boolean offline = true;
+	public static String networkSSID = "CoopSys-Net";
+	public static String networkPass = "clausthal";
 	
 	
 	public static Socket client_socket;// = new Socket("192.168.42.1", 5000);	
-	private static final String ip = "192.168.0.55";
+	public static String ip = "192.168.0.55";
 	//private static final String ip = "192.168.42.1";
 	private static final int port = 5000;
 	private static User user;

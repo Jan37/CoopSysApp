@@ -115,9 +115,11 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				if (ServerConnector.offline) {
 					ServerConnector.offline=false;
+					new getNameList().execute(null, null , null);
 					Toast.makeText(getApplicationContext(), "Online-Modus aktiviert", Toast.LENGTH_SHORT).show();
 				}else{
 					ServerConnector.offline =true;
+					new getNameList().execute(null, null , null);
 					Toast.makeText(getApplicationContext(), "Offline-Modus aktiviert", Toast.LENGTH_SHORT).show();
 				}
 			}

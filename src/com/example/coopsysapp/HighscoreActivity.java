@@ -104,8 +104,8 @@ public class HighscoreActivity extends Activity {
 				pdia=null;
 			}
 			pdia = new ProgressDialog(HighscoreActivity.this);
-            pdia.setMessage("Erstelle Gesamt-Highscore ...");
-            //pdia.show(); 
+            pdia.setMessage("Lade Highscores ...");
+            pdia.show(); 
 		}
 
 	    @Override

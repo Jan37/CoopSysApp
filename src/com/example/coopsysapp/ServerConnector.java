@@ -204,7 +204,7 @@ public class ServerConnector {
 		initialize(ip, port);
 		String message = "";
 		if (!offline) {
-			message = sendFunction("addEinkauf("+ einkauferId + "," + name + "," + datum + "," +")");
+			message = sendFunction("addEinkauf("+ einkauferId + "," + name + "," + datum +")");
 		}else {
 			User[] userList = getNameList();
 			boolean found = false;
